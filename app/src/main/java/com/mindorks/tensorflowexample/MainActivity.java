@@ -18,6 +18,7 @@ package com.mindorks.tensorflowexample;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+//import androidx.appcompat.app.AppCompatActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private Classifier classifier;
     private Executor executor = Executors.newSingleThreadExecutor();
     private TextView textViewResult;
-    private Button btnDetectObject, btnToggleCamera;
+    private Button btnDetectObject, btnToggleCamera, fabRestore;
     private ImageView imageViewResult;
     private CameraView cameraView;
 
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
         btnToggleCamera = (Button) findViewById(R.id.btnToggleCamera);
         btnDetectObject = (Button) findViewById(R.id.btnDetectObject);
+        fabRestore = (Button) findViewById(R.id.floatingActionButton);
 
         cameraView.addCameraKitListener(new CameraKitEventListener() {
             @Override
@@ -110,6 +112,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 cameraView.captureImage();
+            }
+        });
+
+        fabRestore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cameraView.stop();
+                cameraView.start();
             }
         });
 
@@ -166,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 btnDetectObject.setVisibility(View.VISIBLE);
+                fabRestore.setVisibility(View.VISIBLE);
             }
         });
     }

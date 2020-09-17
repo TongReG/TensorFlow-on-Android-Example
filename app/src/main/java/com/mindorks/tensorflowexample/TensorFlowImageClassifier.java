@@ -19,6 +19,7 @@ package com.mindorks.tensorflowexample;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.support.v4.os.TraceCompat;
+//import androidx.core.os.TraceCompat;
 import android.util.Log;
 
 import org.tensorflow.contrib.android.TensorFlowInferenceInterface;
