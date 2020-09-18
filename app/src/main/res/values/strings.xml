@@ -15,8 +15,10 @@
   -->
 
 <resources>
-    <string name="app_name">AndroidTensorFlowMachineLearningExample</string>
+    <string name="app_name">Recognize Example</string>
     <string name="toggle_camera">Toggle Camera</string>
     <string name="detect_object">Detect Object</string>
-    <string name="recognizerresult">RecognizerResult</string>
+    <string name="recognizeresult">RecognizerResult</string>
+    <string name="drawer_open" />
+    <string name="drawer_close" />
 </resources>

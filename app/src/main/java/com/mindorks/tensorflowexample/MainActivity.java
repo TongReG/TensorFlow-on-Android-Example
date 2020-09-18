@@ -19,10 +19,15 @@ package com.mindorks.tensorflowexample;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 //import androidx.appcompat.app.AppCompatActivity;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -52,22 +57,38 @@ public class MainActivity extends AppCompatActivity {
     private Classifier classifier;
     private Executor executor = Executors.newSingleThreadExecutor();
     private TextView textViewResult;
-    private Button btnDetectObject, btnToggleCamera, fabRestore;
+    private Button btnDetectObject, btnToggleCamera;
+    private FloatingActionButton fabRestore;
     private ImageView imageViewResult;
     private CameraView cameraView;
+    private Toolbar mToolbar;
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        cameraView = (CameraView) findViewById(R.id.cameraView);
-        imageViewResult = (ImageView) findViewById(R.id.imageViewResult);
-        textViewResult = (TextView) findViewById(R.id.textViewResult);
+        cameraView = findViewById(R.id.cameraView);
+        imageViewResult = findViewById(R.id.imageViewResult);
+        textViewResult = findViewById(R.id.textViewResult);
         textViewResult.setMovementMethod(new ScrollingMovementMethod());
 
-        btnToggleCamera = (Button) findViewById(R.id.btnToggleCamera);
-        btnDetectObject = (Button) findViewById(R.id.btnDetectObject);
-        fabRestore = (Button) findViewById(R.id.floatingActionButton);
+        btnToggleCamera = findViewById(R.id.btnToggleCamera);
+        btnDetectObject = findViewById(R.id.btnDetectObject);
+        fabRestore = findViewById(R.id.floatingActionButton);
+
+        mToolbar = findViewById(R.id.toolbar);
+        // toolbar.setLogo(R.drawable.ic_launcher);
+        //mToolbar.setTitle("Rocko"); 标题的文字需在setSupportActionBar之前，不然会无效
+        // toolbar.setSubtitle("副标题");
+        setSupportActionBar(mToolbar);
+        /* 这些通过ActionBar来设置也是一样的，注意要在setSupportActionBar(toolbar);之后，不然就报错了 */
+        // getSupportActionBar().setTitle("标题");
+        // getSupportActionBar().setSubtitle("副标题");
+        mDrawerLayout = findViewById(R.id.drawer);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.drawer_open,
+                R.string.drawer_close);
 
         cameraView.addCameraKitListener(new CameraKitEventListener() {
             @Override
@@ -164,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
                             INPUT_NAME,
                             OUTPUT_NAME);
                     makeButtonVisible();
+                    sideMenuDrawable();
                 } catch (final Exception e) {
                     throw new RuntimeException("Error initializing TensorFlow!", e);
                 }
@@ -177,6 +199,17 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 btnDetectObject.setVisibility(View.VISIBLE);
                 fabRestore.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void sideMenuDrawable() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                mDrawerToggle.syncState();
+                mDrawerLayout.setDrawerListener(mDrawerToggle);
             }
         });
     }
