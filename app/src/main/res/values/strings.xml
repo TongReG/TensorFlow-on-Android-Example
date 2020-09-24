@@ -15,7 +15,7 @@
   -->
 
 <resources>
-    <string name="app_name">Recognize Example</string>
+    <string name="app_name">TensorFlowImageClassifier</string>
     <string name="toggle_camera">Toggle Camera</string>
     <string name="detect_object">Detect Object</string>
     <string name="recognizeresult">RecognizerResult</string>

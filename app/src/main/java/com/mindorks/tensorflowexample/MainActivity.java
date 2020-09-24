@@ -16,6 +16,8 @@
 
 package com.mindorks.tensorflowexample;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 //import androidx.appcompat.app.AppCompatActivity;
@@ -25,11 +27,16 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wonderkiln.camerakit.CameraKitError;
 import com.wonderkiln.camerakit.CameraKitEvent;
@@ -38,6 +45,7 @@ import com.wonderkiln.camerakit.CameraKitImage;
 import com.wonderkiln.camerakit.CameraKitVideo;
 import com.wonderkiln.camerakit.CameraView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -61,9 +69,18 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton fabRestore;
     private ImageView imageViewResult;
     private CameraView cameraView;
+    private ListView listView;
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+    private final Context mContext;
+
+    // List用于存储数据
+    private List<Litem> sideList = new ArrayList<>();
+
+    public MainActivity(Context mContext) {
+        this.mContext = mContext;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +88,27 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         cameraView = findViewById(R.id.cameraView);
         imageViewResult = findViewById(R.id.imageViewResult);
+        listView = findViewById(R.id.list_view);
+
+        for (int i = 0; i < 10; i++) {
+            sideList.add(new Litem("Settings", R.drawable.baseline_settings_black_48));
+            sideList.add(new Litem("Share", R.drawable.baseline_share_black_48));
+            sideList.add(new Litem("About", R.drawable.baseline_info_black_48));
+        }
+        ListAdapter list_adapter = new ListAdapter(MainActivity.this, R.layout.list_item, sideList);
+        // 把适配器给ListView
+        listView.setAdapter(list_adapter);
+
+        // 为ListView注册一个监听器，当用户点击了ListView中的任何一个子项时，就会回调onItemClick()方法
+        // 在这个方法中可以通过position参数判断出用户点击的是那一个子项
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Litem pstn = sideList.get(position);
+                Toast.makeText(MainActivity.this, pstn.getName(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
         textViewResult = findViewById(R.id.textViewResult);
         textViewResult.setMovementMethod(new ScrollingMovementMethod());
 
@@ -145,6 +183,30 @@ public class MainActivity extends AppCompatActivity {
         });
 
         initTensorFlowAndLoadModel();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.sidemenu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_settings:
+                return true;
+            case R.id.menu_share:
+                return true;
+            case R.id.menu_about:
+                Intent about_intent = new Intent(this, AboutActivity.class);
+                about_intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(about_intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

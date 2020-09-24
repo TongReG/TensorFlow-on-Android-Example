@@ -73,7 +73,7 @@
                     android:layout_height="80dp"
                     android:fadeScrollbars="false"
                     android:gravity="center"
-                    android:maxLines="15"
+                    android:maxLines="10"
                     android:scrollbars="vertical"
                     android:textColor="@android:color/black" />
 
@@ -124,18 +124,22 @@
 
         <!-- 侧滑菜单内容 -->
 
-        <LinearLayout
+        <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/drawer_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:background="@android:color/background_light"
             android:orientation="vertical"
-            android:padding="8dp" >
+            android:padding="8dp">
 
-            <TextView
+            <ListView
+                android:id="@+id/list_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent">
+
+            </ListView>
+
         </LinearLayout>
 
     </android.support.v4.widget.DrawerLayout>
