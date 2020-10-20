@@ -2,24 +2,19 @@ package com.mindorks.tensorflowexample;
 
 //import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import mehdi.sakout.aboutpage.AboutPage;
 import mehdi.sakout.aboutpage.Element;
 
 public class AboutActivity extends AppCompatActivity {
 
-    private static final String CustomFontPath = "font/sourcecodepro_regular_12.ttf";
-    private static final String DescriptionOne = "DescriptionTest";
-    private static final String VersionCode = "Version 1.1";
+    private static final String CustomFontPath = "fonts/sourcecodepro_regular_12.ttf";
+    private static final String DescriptionOne = "TensorFlow on Android";
+    private static final String VersionCode = "Version 1.1 based on Mindorks";
     //private Typeface CustomTypeface;
 
     @Override
@@ -43,15 +38,15 @@ public class AboutActivity extends AppCompatActivity {
                 .setCustomFont(CustomFontPath) // or Typeface
                 .setDescription(DescriptionOne)
                 .setImage(R.mipmap.ic_launcher)
-                //.addItem(versionElement)
-                .addGroup("Connect Me")
+                .addItem(versionElement)
+                .addGroup("Connect Us")
                 .addEmail("tongrui_tr@163.com")
                 .addWebsite("https://www.zhihu.com/people/ren-sheng-ru-lu")
                 //.addFacebook("the.medy")
                 //.addTwitter("medyo80")
                 //.addYoutube("UCdPQtdWIsg7_pi4mrRu46vA")
                 .addPlayStore("com.mindorks.tensorflowexample")
-                .addGitHub("zerofreeze")
+                .addGitHub("TongReG")
                 //.addInstagram("medyo80")
                 .create();
         relativeLayout.addView(aboutPage);
@@ -61,14 +56,14 @@ public class AboutActivity extends AppCompatActivity {
         只要在onCreateOptionsMenu方法中加载父类的menu就可以了
         https://www.jianshu.com/p/86866a877d3b
         */
-/*    @Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);//调用这一句保证父类的菜单项可以正常加载
         getMenuInflater().inflate(R.menu.sidemenu, menu);//加载子类自己的菜单项
         return true;
     }
 
-    @Override
+/*    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:

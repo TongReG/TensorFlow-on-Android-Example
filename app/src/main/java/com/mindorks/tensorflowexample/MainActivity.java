@@ -73,14 +73,9 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-    private final Context mContext;
 
     // List用于存储数据
     private List<Litem> sideList = new ArrayList<>();
-
-    public MainActivity(Context mContext) {
-        this.mContext = mContext;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
