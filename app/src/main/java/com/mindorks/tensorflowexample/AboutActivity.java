@@ -12,7 +12,7 @@ import mehdi.sakout.aboutpage.Element;
 
 public class AboutActivity extends AppCompatActivity {
 
-    private static final String CustomFontPath = "fonts/sourcecodepro_regular_12.ttf";
+    private static final String CustomFontPath = "fonts/DejaVu_Sans_Mono_for_Powerline.ttf";
     private static final String DescriptionOne = "TensorFlow on Android";
     private static final String VersionCode = "Version 1.1 based on Mindorks";
     //private Typeface CustomTypeface;
@@ -39,7 +39,7 @@ public class AboutActivity extends AppCompatActivity {
                 .setDescription(DescriptionOne)
                 .setImage(R.mipmap.ic_launcher)
                 .addItem(versionElement)
-                .addGroup("Connect Us")
+                .addGroup("Contact Us")
                 .addEmail("tongrui_tr@163.com")
                 .addWebsite("https://www.zhihu.com/people/ren-sheng-ru-lu")
                 //.addFacebook("the.medy")

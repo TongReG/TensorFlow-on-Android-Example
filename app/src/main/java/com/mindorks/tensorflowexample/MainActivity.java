@@ -27,9 +27,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -85,11 +87,13 @@ public class MainActivity extends AppCompatActivity {
         imageViewResult = findViewById(R.id.imageViewResult);
         listView = findViewById(R.id.list_view);
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 3; i++) {
+            sideList.add(new Litem("Image Classify", R.drawable.baseline_image_black_48));
+            sideList.add(new Litem("Object Detection", R.drawable.baseline_nature_people_black_48));
             sideList.add(new Litem("Settings", R.drawable.baseline_settings_black_48));
-            sideList.add(new Litem("Share", R.drawable.baseline_share_black_48));
             sideList.add(new Litem("About", R.drawable.baseline_info_black_48));
         }
+
         ListAdapter list_adapter = new ListAdapter(MainActivity.this, R.layout.list_item, sideList);
         // 把适配器给ListView
         listView.setAdapter(list_adapter);
@@ -101,6 +105,13 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Litem pstn = sideList.get(position);
                 Toast.makeText(MainActivity.this, pstn.getName(), Toast.LENGTH_SHORT).show();
+                if (pstn.getName().equals("About")) {
+                    Intent aboutintent = new Intent(MainActivity.this, AboutActivity.class);
+                    startActivity(aboutintent);
+                } else if (pstn.getName().equals("Settings")) {
+                    Intent Setintent = new Intent(MainActivity.this, Settings.class);
+                    startActivity(Setintent);
+                }
             }
         });
 
@@ -122,6 +133,9 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout = findViewById(R.id.drawer);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.drawer_open,
                 R.string.drawer_close);
+
+        sideMenuDrawable();
+
 
         cameraView.addCameraKitListener(new CameraKitEventListener() {
             @Override
@@ -173,7 +187,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 cameraView.stop();
+                Toast.makeText(MainActivity.this, "Reset CameraView", Toast.LENGTH_SHORT).show();
                 cameraView.start();
+            }
+        });
+
+        fabRestore.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Toast.makeText(MainActivity.this, "OnTouchListener", Toast.LENGTH_SHORT).show();
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        break;
+                }
+                return false;
             }
         });
 
@@ -191,8 +222,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_settings:
+                Intent setting_intent = new Intent(this, Settings.class);
+                startActivity(setting_intent);
                 return true;
             case R.id.menu_share:
+                Toast.makeText(MainActivity.this, "Sharing", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_about:
                 Intent about_intent = new Intent(this, AboutActivity.class);
@@ -242,7 +276,6 @@ public class MainActivity extends AppCompatActivity {
                             INPUT_NAME,
                             OUTPUT_NAME);
                     makeButtonVisible();
-                    sideMenuDrawable();
                 } catch (final Exception e) {
                     throw new RuntimeException("Error initializing TensorFlow!", e);
                 }

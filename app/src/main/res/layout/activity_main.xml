@@ -15,6 +15,7 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -28,7 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <FrameLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        <FrameLayout
             android:id="@+id/activity_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -46,13 +47,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:layout_gravity="center|top"
-                android:fadingEdge="horizontal|vertical"
-                android:fadingEdgeLength="6dp" />
+                android:fadingEdge="horizontal|vertical" />
 
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center|top"
                 android:layout_marginTop="300dp"
                 android:background="@color/resultview"
@@ -80,27 +80,36 @@
             </LinearLayout>
 
 
-            <Button
-                android:id="@+id/btnToggleCamera"
-                style="@style/Widget.AppCompat.Button.Colored"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="match_parent"
                 android:layout_gravity="bottom|center"
-                android:layout_marginBottom="50dp"
-                android:text="@string/toggle_camera"
-                android:textAllCaps="false"
-                android:textColor="@android:color/white" />
+                android:background="@color/resultview"
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btnDetectObject"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_gravity="bottom|center"
-                android:text="@string/detect_object"
-                android:textAllCaps="false"
-                android:textColor="@android:color/white"
-                android:visibility="gone" />
+                <Button
+                    android:id="@+id/btnToggleCamera"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_gravity="bottom|center"
+                    android:layout_marginBottom="50dp"
+                    android:text="@string/toggle_camera"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white" />
+
+                <Button
+                    android:id="@+id/btnDetectObject"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_gravity="bottom|center"
+                    android:text="@string/detect_object"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    android:visibility="invisible" />
+
+            </LinearLayout>
 
             <android.support.design.widget.CoordinatorLayout
                 android:id="@+id/cl"
@@ -124,7 +133,7 @@
 
         <!-- 侧滑菜单内容 -->
 
-        <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        <LinearLayout
             android:id="@+id/drawer_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

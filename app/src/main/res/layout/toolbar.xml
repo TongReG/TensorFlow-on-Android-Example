@@ -8,7 +8,7 @@
     android:minHeight="?attr/actionBarSize"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-    app:title="@string/app_name"
+    app:title="@string/app_newname"
     app:titleTextColor="@color/colortext">
 
 </android.support.v7.widget.Toolbar>
