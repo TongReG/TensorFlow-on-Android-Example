@@ -25,6 +25,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -145,7 +146,10 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onError(CameraKitError cameraKitError) {
-
+                Exception CameraExc = cameraKitError.getException();
+                assert CameraExc != null;
+                CameraExc.printStackTrace();
+                Toast.makeText(MainActivity.this, CameraExc.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -215,7 +219,13 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.sidemenu, menu);
-        return true;
+        MenuItem shareItem = menu.findItem(R.id.menu_share);
+        if (shareItem != null){
+            ShareActionProvider SharePd =  shareItem.getActionProvider();
+            SharePd.setShareIntent(getDefaultIntent());
+            return true;
+        }
+
     }
 
     @Override
@@ -302,5 +312,12 @@ public class MainActivity extends AppCompatActivity {
                 mDrawerLayout.setDrawerListener(mDrawerToggle);
             }
         });
+    }
+
+    private Intent getDefaultIntent() {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("image/*");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, "这是要发送的文本");
+        return intent;
     }
 }

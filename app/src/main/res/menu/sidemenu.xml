@@ -11,23 +11,49 @@
         android:id="@+id/menu_settings"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:icon="@mipmap/ic_launcher"
         android:textColor="@android:color/black"
         android:title="Settings"
         app:showAsAction="never" />
+
     <item
         android:id="@+id/menu_share"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:icon="@mipmap/ic_launcher"
         android:textColor="@android:color/black"
         android:title="Share"
-        app:showAsAction="never" />
+        app:showAsAction="never">
+
+        <menu
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <item
+                android:id="@+id/computer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:title="Share1"
+                app:showAsAction="never"/>
+            <item
+                android:id="@+id/art"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:title="Share2"
+                app:showAsAction="never"/>
+            <item
+                android:id="@+id/english"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/black"
+                android:title="Share3"
+                app:showAsAction="never"/>
+        </menu>
+    </>
+
     <item
         android:id="@+id/menu_about"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:icon="@mipmap/ic_launcher"
         android:textColor="@android:color/black"
         android:title="About"
         app:showAsAction="never" />

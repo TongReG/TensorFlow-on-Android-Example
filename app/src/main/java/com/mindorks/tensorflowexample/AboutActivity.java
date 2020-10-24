@@ -2,8 +2,10 @@ package com.mindorks.tensorflowexample;
 
 //import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -25,12 +27,10 @@ public class AboutActivity extends AppCompatActivity {
         //CustomTypeface = Typeface.createFromAsset(getAssets(), "fonts/.ttf");
         Element versionElement = new Element().setTitle(VersionCode);
         RelativeLayout relativeLayout = findViewById(R.id.relativeLayout);
-/*        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-        }*/
+        }
 
         View aboutPage = new AboutPage(this)
                 .isRTL(false)
@@ -61,6 +61,16 @@ public class AboutActivity extends AppCompatActivity {
         super.onCreateOptionsMenu(menu);//调用这一句保证父类的菜单项可以正常加载
         getMenuInflater().inflate(R.menu.sidemenu, menu);//加载子类自己的菜单项
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default: return true;
+        }
     }
 
 }

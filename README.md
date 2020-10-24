@@ -10,8 +10,9 @@
 * This project based on [the Mindorks Android TensorFlow Machine Learning Example](https://github.com/MindorksOpenSource/AndroidTensorFlowMachineLearningExample) which include an example for object detection for an image taken from camera using TensorFlow library.
 
 ## How to use this repository
-`git clone https://gitee.com/zerofreeze/AndroidTensorFlowMachineLearningExample.git` or `git clone https://github.com/TongReG/TensorFlow-on-Android-Example.git` and Open the folder with Android Studio 3.0 or newer as an Project.
-** You may have to declare the project NDK path yourself. **
+`git clone https://gitee.com/zerofreeze/AndroidTensorFlowMachineLearningExample.git` or </br>
+`git clone https://github.com/TongReG/TensorFlow-on-Android-Example.git` and Open the folder with Android Studio 3.0 or newer as an Project.
+**You may have to declare the project NDK and SDK path by yourself.**
 
 ## Example
 <p align="center">
