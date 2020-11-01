@@ -37,7 +37,7 @@ public class AboutActivity extends AppCompatActivity {
                 //.enableDarkMode(false)
                 .setCustomFont(CustomFontPath) // or Typeface
                 .setDescription(DescriptionOne)
-                .setImage(R.mipmap.ic_launcher)
+                .setImage(R.drawable.ic_launcher)
                 .addItem(versionElement)
                 .addGroup("Contact Us")
                 .addEmail("tongrui_tr@163.com")

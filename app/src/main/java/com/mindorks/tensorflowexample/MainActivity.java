@@ -18,6 +18,8 @@ package com.mindorks.tensorflowexample;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 //import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +29,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
+import android.support.v4.view.MenuItemCompat;
+//import android.support.v4.view.MenuCompat;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
@@ -36,7 +40,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -70,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView textViewResult;
     private Button btnDetectObject, btnToggleCamera;
     private FloatingActionButton fabRestore;
-    private ImageView imageViewResult;
+    private RoundImageView imageViewResult;
     private CameraView cameraView;
     private ListView listView;
     private Toolbar mToolbar;
@@ -141,7 +144,9 @@ public class MainActivity extends AppCompatActivity {
         cameraView.addCameraKitListener(new CameraKitEventListener() {
             @Override
             public void onEvent(CameraKitEvent cameraKitEvent) {
-
+                if (!cameraKitEvent.getMessage().equals("")) {
+                    Toast.makeText(MainActivity.this, cameraKitEvent.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -173,6 +178,30 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+       /* cameraView.setGestureListener(new CameraKitView.GestureListener() {
+            @Override
+            public void onTap(CameraKitView cameraKitView, float v, float v1) {
+
+            }
+
+            @Override
+            public void onLongTap(CameraKitView cameraKitView, float v, float v1) {
+
+            }
+
+            @Override
+            public void onDoubleTap(CameraKitView cameraKitView, float v, float v1) {
+
+            }
+
+            @Override
+            public void onPinch(CameraKitView cameraKitView, float v, float v1, float v2) {
+
+            }
+        });*/
+
+
         btnToggleCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -199,16 +228,16 @@ public class MainActivity extends AppCompatActivity {
         fabRestore.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Toast.makeText(MainActivity.this, "OnTouchListener", Toast.LENGTH_SHORT).show();
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        break;
+                        return false;
                     case MotionEvent.ACTION_MOVE:
-                        break;
+                        return false;
                     case MotionEvent.ACTION_UP:
-                        break;
+                        return false;
+                    default:
+                        return true;
                 }
-                return false;
             }
         });
 
@@ -219,13 +248,17 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.sidemenu, menu);
-        MenuItem shareItem = menu.findItem(R.id.menu_share);
-        if (shareItem != null){
-            ShareActionProvider SharePd =  shareItem.getActionProvider();
+        MenuItem shareitem = menu.findItem(R.id.share_button);
+        // https://blog.csdn.net/j086924/article/details/81233212
+        if (shareitem != null) {
+            ShareActionProvider SharePd = (ShareActionProvider) MenuItemCompat.getActionProvider(shareitem);
             SharePd.setShareIntent(getDefaultIntent());
-            return true;
+            /*if (SharePd == null) {
+                menu.removeItem(R.id.share_button);
+                //如果没有第3方应用可以直接用，可以添加一个新的菜单项，可以跳转到自己的activity，然后处理等
+            }*/
         }
-
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -235,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent setting_intent = new Intent(this, Settings.class);
                 startActivity(setting_intent);
                 return true;
-            case R.id.menu_share:
+            case R.id.share_button:
                 Toast.makeText(MainActivity.this, "Sharing", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_about:
@@ -316,8 +349,17 @@ public class MainActivity extends AppCompatActivity {
 
     private Intent getDefaultIntent() {
         Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("image/*");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, "这是要发送的文本");
+        PackageManager pm = getPackageManager();
+        //检查手机上是否存在可以处理这个动作的应用
+        List<ResolveInfo> infolist = pm.queryIntentActivities(intent, 0);
+        if (!infolist.isEmpty()) {
+            intent.setType("image/*");
+            intent.putExtra(Intent.EXTRA_TEXT, "Want to join me for share? 这是要发送的文本");
+        } else {
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_TEXT, "No Sharing App Found.");
+            Toast.makeText(MainActivity.this, "No Sharing App Found", Toast.LENGTH_SHORT).show();
+        }
         return intent;
     }
 }
