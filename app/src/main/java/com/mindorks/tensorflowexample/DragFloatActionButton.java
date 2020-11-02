@@ -15,6 +15,7 @@ public class DragFloatActionButton extends FloatingActionButton {
     private int screenWidthHalf;
     private int statusHeight;
     private int virtualHeight;
+    private int fabround, fabmargin;
 
     public DragFloatActionButton(Context context) {
         super(context);
@@ -37,6 +38,15 @@ public class DragFloatActionButton extends FloatingActionButton {
         screenHeight = ScreenUtils.getScreenHeight(getContext());
         statusHeight = ScreenUtils.getStatusHeight(getContext());
         virtualHeight = ScreenUtils.getVirtualBarHeigh(getContext());
+        fabround = getSize();
+        if (fabround == -1) { //public static final int SIZE_AUTO = -1;
+            fabround = 64;
+        } else if (fabround == 1) { //public static final int SIZE_MINI = 1;
+            fabround = 40;
+        } else {
+            fabround = 56;
+        }
+        fabmargin = getResources().getDimensionPixelSize(R.dimen.fab_margin);
     }
 
     private int lastX;
@@ -59,7 +69,7 @@ public class DragFloatActionButton extends FloatingActionButton {
                 getParent().requestDisallowInterceptTouchEvent(true);
                 lastX = rawX;
                 lastY = rawY;
-                Log.d("ACTION_DOWN ----> ", "getX=" + getX() + "；screenWidthHalf=" + screenWidthHalf);
+                Log.d("ACTION_DOWN ----> ", "getX=" + getX() + " screenWidthHalf=" + screenWidthHalf);
                 break;
             case MotionEvent.ACTION_MOVE:
                 isDrag = true;
@@ -79,39 +89,62 @@ public class DragFloatActionButton extends FloatingActionButton {
                 float y = getY() + dy;
 
                 //检测是否到达边缘 左上右下
-                x = x < 0 ? 0 : x > screenWidth - getWidth() ? screenWidth - getWidth() : x;
+                x = (x < fabmargin) ? fabmargin : x > screenWidth - getWidth() - fabmargin ? screenWidth - getWidth() - fabmargin : x;
                 // y = y < statusHeight ? statusHeight : (y + getHeight() >= screenHeight ? screenHeight - getHeight() : y);
-                if (y < 0) {
-                    y = 0;
+                if (y < fabmargin) {
+                    y = fabmargin;
                 }
-                if (y > screenHeight - statusHeight - getHeight()) {
-                    y = screenHeight - statusHeight - getHeight();
+                if (y > screenHeight - statusHeight - virtualHeight - fabmargin - getHeight()) {
+                    if (virtualHeight == 0) {
+                        y = screenHeight - statusHeight - fabmargin - getHeight();
+                    } else {
+                        y = screenHeight - statusHeight - virtualHeight - fabmargin - getHeight();
+                    }
                 }
                 setX(x);
                 setY(y);
 
                 lastX = rawX;
                 lastY = rawY;
-                Log.d("ACTION_MOVE ----> ", "getX=" + getX() + "；screenWidthHalf=" + screenWidthHalf + " " + isDrag + "  statusHeight=" + statusHeight + " virtualHeight" + virtualHeight + " screenHeight" + screenHeight + "  getHeight=" + getHeight() + " y" + y);
+                Log.d("ACTION_MOVE ----> ", "getX=" + getX() + " y=" + y + " screenWidthHalf=" + screenWidthHalf + " isDrag=" + isDrag + " statusHeight=" + statusHeight + " virtualHeight=" + virtualHeight + " screenHeight=" + screenHeight + " getHeight=" + getHeight());
                 break;
             case MotionEvent.ACTION_UP:
                 if (isDrag) {
                     //恢复按压效果
                     setPressed(false);
-                    Log.d("ACTION_UP ----> " , "getX=" + getX() + "；screenWidthHalf=" + screenWidthHalf);
+                    Log.d("ACTION_UP ----> ", "getX=" + getX() + "；screenWidthHalf=" + screenWidthHalf);
                     if (rawX >= screenWidthHalf) {
                         animate().setInterpolator(new DecelerateInterpolator())
                                 .setDuration(500)
-                                .xBy(screenWidth - getWidth() - getX())
+                                .xBy(screenWidth - getWidth() - getX() - fabmargin)
                                 .start();
                     } else {
-                        ObjectAnimator oa = ObjectAnimator.ofFloat(this, "x", getX(), 0);
+                        ObjectAnimator oa = ObjectAnimator.ofFloat(this, "x", getX(), getX());
+ /*                       if (getX() < fabmargin) {
+                            oa = ObjectAnimator.ofFloat(this, "x", fabmargin, 0);
+                        } else {
+                            oa = ObjectAnimator.ofFloat(this, "x", getX(), 0);
+                        }*/
                         oa.setInterpolator(new DecelerateInterpolator());
                         oa.setDuration(500);
                         oa.start();
                     }
                 }
-                Log.d("ACTION_UP ----> ", isDrag + "");
+                else {
+                    Log.d("ACTION_UP_FALSE ----> ", "getX=" + getX() + "；screenWidthHalf=" + screenWidthHalf);
+                    if (rawX >= screenWidthHalf) {
+                        animate().setInterpolator(new DecelerateInterpolator())
+                                .setDuration(500)
+                                .xBy(screenWidth - getWidth() - getX() - fabmargin)
+                                .start();
+                    } else {
+                        ObjectAnimator oa = ObjectAnimator.ofFloat(this, "x", getX(), getX());
+                        oa.setInterpolator(new DecelerateInterpolator());
+                        oa.setDuration(500);
+                        oa.start();
+                    }
+                }
+                Log.d("ACTION_UP ----> ", "isDrag=" + isDrag);
                 break;
         }
         //如果是拖拽则消耗事件，否则正常传递即可。

@@ -24,140 +24,142 @@
 
     <include layout="@layout/toolbar" />
 
-    <android.support.v4.widget.DrawerLayout
-        android:id="@+id/drawer"
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/cl"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <FrameLayout
-            android:id="@+id/activity_main"
+        <android.support.v4.widget.DrawerLayout
+            android:id="@+id/drawer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/resultview"
-            android:fadingEdge="horizontal|vertical"
-            android:fadingEdgeLength="16dp"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            tools:context="com.mindorks.tensorflowexample.MainActivity">
+            android:layout_height="match_parent">
 
-            <com.wonderkiln.camerakit.CameraView
-                android:id="@+id/cameraView"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_gravity="center|top"
-                android:adjustViewBounds="true"
-                android:fadingEdge="horizontal|vertical"
-                android:keepScreenOn="true" />
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|top"
-                android:layout_marginTop="300dp"
-                android:background="@drawable/shape_corner"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <com.mindorks.tensorflowexample.RoundImageView
-                    android:id="@+id/imageViewResult"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
-                    android:background="@drawable/shape_corner"
-                    android:contentDescription="@string/recognizeresult"
-                    android:requiresFadingEdge="horizontal|vertical"
-                    android:scaleType="center" />
-
-                <TextView
-                    android:id="@+id/textViewResult"
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:background="@drawable/shape_corner"
-                    android:fadeScrollbars="false"
-                    android:fontFamily="sans-serif-light"
-                    android:gravity="center"
-                    android:maxLines="10"
-                    android:scrollbars="vertical"
-                    android:textColor="@android:color/black" />
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center"
-                android:background="@drawable/shape_corner"
-                android:gravity="center"
-                android:orientation="vertical"
-                tools:visibility="visible">
-
-                <Button
-                    android:id="@+id/btnToggleCamera"
-                    style="@style/Widget.AppCompat.Button.Colored"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_gravity="bottom|center"
-                    android:text="@string/toggle_camera"
-                    android:textAllCaps="false"
-                    android:textColor="@android:color/white" />
-
-                <Button
-                    android:id="@+id/btnDetectObject"
-                    style="@style/Widget.AppCompat.Button.Colored"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_gravity="bottom|center"
-                    android:text="@string/detect_object"
-                    android:textAllCaps="false"
-                    android:textColor="@android:color/white"
-                    android:visibility="invisible" />
-
-            </LinearLayout>
-
-            <android.support.design.widget.CoordinatorLayout
-                android:id="@+id/cl"
+            <FrameLayout
+                android:id="@+id/activity_main"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:background="@color/resultview"
+                android:fadingEdge="horizontal|vertical"
+                android:fadingEdgeLength="16dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                tools:context="com.mindorks.tensorflowexample.MainActivity">
 
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/floatingActionButton"
-                    android:layout_width="wrap_content"
+                <com.wonderkiln.camerakit.CameraView
+                    android:id="@+id/cameraView"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_gravity="center|top"
+                    android:adjustViewBounds="true"
+                    android:fadingEdge="horizontal|vertical"
+                    android:keepScreenOn="true" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center|end"
-                    android:layout_marginTop="120dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:visibility="invisible"
-                    app:srcCompat="@drawable/baseline_cached_black_36" />
+                    android:layout_gravity="center|top"
+                    android:layout_marginTop="300dp"
+                    android:background="@drawable/shape_corner"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
-            </android.support.design.widget.CoordinatorLayout>
+                    <com.mindorks.tensorflowexample.RoundImageView
+                        android:id="@+id/imageViewResult"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:background="@drawable/shape_corner"
+                        android:contentDescription="@string/recognizeresult"
+                        android:requiresFadingEdge="horizontal|vertical"
+                        android:scaleType="center" />
 
-        </FrameLayout>
+                    <TextView
+                        android:id="@+id/textViewResult"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:background="@drawable/shape_corner"
+                        android:fadeScrollbars="false"
+                        android:fontFamily="sans-serif-light"
+                        android:gravity="center"
+                        android:maxLines="10"
+                        android:scrollbars="vertical"
+                        android:textColor="@android:color/black" />
 
-        <!-- 侧滑菜单内容 -->
+                </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/drawer_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:background="@android:color/background_light"
-            android:orientation="vertical"
-            android:padding="8dp">
 
-            <ListView
-                android:id="@+id/list_view"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center"
+                    android:background="@drawable/shape_corner"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    tools:visibility="visible">
+
+                    <Button
+                        android:id="@+id/btnToggleCamera"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_gravity="bottom|center"
+                        android:text="@string/toggle_camera"
+                        android:textAllCaps="false"
+                        android:textColor="@android:color/white" />
+
+                    <Button
+                        android:id="@+id/btnDetectObject"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_gravity="bottom|center"
+                        android:text="@string/detect_object"
+                        android:textAllCaps="false"
+                        android:textColor="@android:color/white"
+                        android:visibility="invisible" />
+
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <!-- 侧滑菜单内容 -->
+
+            <LinearLayout
+                android:id="@+id/drawer_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:background="@android:color/background_light"
+                android:orientation="vertical"
+                android:padding="8dp">
 
-            </ListView>
+                <ListView
+                    android:id="@+id/list_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-        </LinearLayout>
+                </ListView>
 
-    </android.support.v4.widget.DrawerLayout>
+            </LinearLayout>
+
+        </android.support.v4.widget.DrawerLayout>
+
+        <com.mindorks.tensorflowexample.DragFloatActionButton
+            android:id="@+id/floatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|right"
+            android:layout_margin="16dp"
+            android:layout_marginTop="120dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="invisible"
+            app:layout_anchorGravity="right"
+            app:srcCompat="@drawable/baseline_cached_black_36" />
+
+    </android.support.design.widget.CoordinatorLayout>
 
 </LinearLayout>

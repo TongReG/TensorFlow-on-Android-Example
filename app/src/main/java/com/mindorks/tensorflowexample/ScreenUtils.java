@@ -3,6 +3,7 @@ package com.mindorks.tensorflowexample;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.Window;
@@ -22,7 +23,7 @@ public class ScreenUtils {
     }
 
     /**
-     * 获得屏幕高度
+     * 获得屏幕宽度
      *
      * @param context
      * @return widthPixels;
@@ -36,7 +37,7 @@ public class ScreenUtils {
     }
 
     /**
-     * 获得屏幕宽度
+     * 获得屏幕高度
      *
      * @param context
      * @return heightPixels
@@ -48,6 +49,26 @@ public class ScreenUtils {
         wm.getDefaultDisplay().getMetrics(outMetrics);
         return outMetrics.heightPixels;
     }
+
+    /**
+     * 获得屏幕真实高度
+     *
+     * @param context
+     * @return heightPixels
+     */
+    public static int getRealHeight(Context context) {
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = windowManager.getDefaultDisplay();
+        DisplayMetrics dm = new DisplayMetrics();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            display.getRealMetrics(dm);
+        } else {
+            display.getMetrics(dm);
+        }
+        int realHeight = dm.heightPixels;
+        return realHeight;
+    }
+
 
     /**
      * 获得状态栏的高度

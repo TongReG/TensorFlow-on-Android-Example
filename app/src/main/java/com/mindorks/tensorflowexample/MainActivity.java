@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
     private Executor executor = Executors.newSingleThreadExecutor();
     private TextView textViewResult;
     private Button btnDetectObject, btnToggleCamera;
-    private FloatingActionButton fabRestore;
+    private DragFloatActionButton fabRestore;
     private RoundImageView imageViewResult;
     private CameraView cameraView;
     private ListView listView;
@@ -178,54 +178,41 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-       /* cameraView.setGestureListener(new CameraKitView.GestureListener() {
-            @Override
-            public void onTap(CameraKitView cameraKitView, float v, float v1) {
-
-            }
-
-            @Override
-            public void onLongTap(CameraKitView cameraKitView, float v, float v1) {
-
-            }
-
-            @Override
-            public void onDoubleTap(CameraKitView cameraKitView, float v, float v1) {
-
-            }
-
-            @Override
-            public void onPinch(CameraKitView cameraKitView, float v, float v1, float v2) {
-
-            }
-        });*/
+        //cameraView.;
 
 
         btnToggleCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                fabRestore.setClickable(false);
                 cameraView.toggleFacing();
+                fabRestore.setClickable(true);
             }
         });
 
         btnDetectObject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                fabRestore.setClickable(false);
                 cameraView.captureImage();
+                fabRestore.setClickable(true);
             }
         });
 
         fabRestore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btnDetectObject.setClickable(false);
+                btnToggleCamera.setClickable(false);
                 cameraView.stop();
                 Toast.makeText(MainActivity.this, "Reset CameraView", Toast.LENGTH_SHORT).show();
                 cameraView.start();
+                btnDetectObject.setClickable(true);
+                btnToggleCamera.setClickable(true);
             }
         });
 
-        fabRestore.setOnTouchListener(new View.OnTouchListener() {
+        /*fabRestore.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
@@ -239,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                 }
             }
-        });
+        });*/
 
         initTensorFlowAndLoadModel();
     }
