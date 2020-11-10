@@ -23,7 +23,6 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 //import androidx.appcompat.app.AppCompatActivity;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -36,7 +35,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -67,9 +65,11 @@ public class MainActivity extends AppCompatActivity {
     private static final String MODEL_FILE = "file:///android_asset/tensorflow_inception_graph.pb";
     private static final String LABEL_FILE =
             "file:///android_asset/imagenet_comp_graph_label_strings.txt";
+    private String rss = "";
 
     private Classifier classifier;
     private Executor executor = Executors.newSingleThreadExecutor();
+    private Executor cached_executor = Executors.newCachedThreadPool();
     private TextView textViewResult;
     private Button btnDetectObject, btnToggleCamera;
     private DragFloatActionButton fabRestore;
@@ -166,9 +166,16 @@ public class MainActivity extends AppCompatActivity {
 
                 imageViewResult.setImageBitmap(bitmap);
 
-                final List<Classifier.Recognition> results = classifier.recognizeImage(bitmap);
+                final Bitmap finalBitmap = bitmap;
+                cached_executor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        final List<Classifier.Recognition> results = classifier.recognizeImage(finalBitmap);
+                        rss = results.toString();
+                    }
+                });
 
-                textViewResult.setText(results.toString());
+                textViewResult.setText(rss);
 
             }
 
@@ -318,7 +325,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 btnDetectObject.setVisibility(View.VISIBLE);
-                fabRestore.setVisibility(View.VISIBLE);
+                fabRestore.show();
             }
         });
     }
