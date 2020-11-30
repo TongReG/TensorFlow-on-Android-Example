@@ -28,6 +28,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.CardView;
 import android.support.v4.view.MenuItemCompat;
 //import android.support.v4.view.MenuCompat;
 import android.text.method.ScrollingMovementMethod;
@@ -77,11 +78,15 @@ public class MainActivity extends AppCompatActivity {
     private CameraView cameraView;
     private ListView listView;
     private Toolbar mToolbar;
+    private CardView RsltCard;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
 
     // List用于存储数据
-    private List<Litem> sideList = new ArrayList<>();
+    private List<Litem> sideList = new ArrayList<Litem>() {
+
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
         cameraView = findViewById(R.id.cameraView);
         imageViewResult = findViewById(R.id.imageViewResult);
         listView = findViewById(R.id.list_view);
+        RsltCard = findViewById(R.id.ResultCard);
 
         for (int i = 0; i < 3; i++) {
             sideList.add(new Litem("Image Classify", R.drawable.baseline_image_black_48));
@@ -112,9 +118,11 @@ public class MainActivity extends AppCompatActivity {
                 if (pstn.getName().equals("About")) {
                     Intent aboutintent = new Intent(MainActivity.this, AboutActivity.class);
                     startActivity(aboutintent);
+                    cameraView.stop();
                 } else if (pstn.getName().equals("Settings")) {
                     Intent Setintent = new Intent(MainActivity.this, Settings.class);
                     startActivity(Setintent);
+                    cameraView.stop();
                 }
             }
         });
@@ -185,8 +193,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //cameraView.;
+        cameraView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
+
+        RsltCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         btnToggleCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -218,22 +237,6 @@ public class MainActivity extends AppCompatActivity {
                 btnToggleCamera.setClickable(true);
             }
         });
-
-        /*fabRestore.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        return false;
-                    case MotionEvent.ACTION_MOVE:
-                        return false;
-                    case MotionEvent.ACTION_UP:
-                        return false;
-                    default:
-                        return true;
-                }
-            }
-        });*/
 
         initTensorFlowAndLoadModel();
     }

@@ -32,4 +32,9 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="action_share">Share</string>
+
+    <string name="change_model">Choose Model</string>
+    <string name="change_output">Change Output</string>
+    <string name="Threading">Multi-threading</string>
+    <string name="Exit">Return</string>
 </resources>

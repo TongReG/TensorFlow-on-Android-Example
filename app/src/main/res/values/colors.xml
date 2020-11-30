@@ -20,6 +20,7 @@
     <color name="colorPrimaryDark">#4DB6AC</color>
     <color name="colorAccent">#FF4081</color>
     <color name="background">#A826C6DA</color>
-    <color name="resultview">#E1F5FE</color>
+    <color name="mainview">#E1F5FE</color>
+    <color name="resultview">#F5FCFF</color>
     <color name="colortext">#FFFFFF</color>
 </resources>
