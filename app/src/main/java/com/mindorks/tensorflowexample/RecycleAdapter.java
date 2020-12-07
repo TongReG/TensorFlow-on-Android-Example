@@ -13,17 +13,23 @@ import java.util.ArrayList;
 public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyHolder> {
 
     private final LayoutInflater mLayoutInflater;
-    static final ArrayList<Ritem> mData = new ArrayList<>();
+    private static Ritem chmodel =new Ritem("Choose Model", R.drawable.baseline_input_black_36);
+    private static Ritem chout =new Ritem("Change Output", R.drawable.baseline_logout_black_36);
+    private static Ritem mthread =new Ritem("Multi-threading", R.drawable.baseline_speed_black_36);
+    private static Ritem ret =new Ritem("Return", R.drawable.baseline_arrow_back_black_36);
+
+    static ArrayList<Ritem> mData = new ArrayList<Ritem>() {
+    };
 
 
     public RecycleAdapter(Context context) {
         mLayoutInflater = LayoutInflater.from(context);
 
         for (int i = 0; i < 3; i++) {
-            mData.add(new Ritem(context.getResources().getString(R.string.change_model), R.drawable.baseline_input_black_36));
-            mData.add(new Ritem(context.getResources().getString(R.string.change_output), R.drawable.baseline_logout_black_36));
-            mData.add(new Ritem(context.getResources().getString(R.string.Threading), R.drawable.baseline_speed_black_36));
-            mData.add(new Ritem(context.getResources().getString(R.string.Exit), R.drawable.baseline_arrow_back_black_36));
+            mData.add(chmodel);
+            mData.add(chout);
+            mData.add(mthread);
+            mData.add(ret);
         }
     }
 
@@ -62,7 +68,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyHolder
         return mData == null ? 0 : mData.size();
     }
 
-    public class MyHolder extends RecyclerView.ViewHolder {
+    public static class MyHolder extends RecyclerView.ViewHolder {
         TextView mTextView, mTextViewtwo;
         ImageView mImageView;
 

@@ -35,100 +35,94 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <FrameLayout
+            <LinearLayout
                 android:id="@+id/activity_main"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/mainview"
                 android:fadingEdge="horizontal|vertical"
                 android:fadingEdgeLength="16dp"
+                android:orientation="vertical"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingBottom="@dimen/activity_vertical_margin"
                 tools:context="com.mindorks.tensorflowexample.MainActivity">
 
-                <LinearLayout
+                <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_gravity="start"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:translationZ="4dp"
+                    app:cardBackgroundColor="@color/resultview"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="2dp"
+                    app:cardUseCompatPadding="true">
 
-                    <android.support.v7.widget.CardView
+                    <com.wonderkiln.camerakit.CameraView
+                        android:id="@+id/cameraView"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="start"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:translationZ="4dp"
-                        app:cardBackgroundColor="@color/resultview"
-                        app:cardCornerRadius="4dp"
-                        app:cardElevation="2dp"
-                        app:cardUseCompatPadding="true">
-
-                        <com.wonderkiln.camerakit.CameraView
-                            android:id="@+id/cameraView"
-                            android:layout_width="match_parent"
-                            android:layout_height="300dp"
-                            android:layout_gravity="center|top"
-                            android:layout_margin="4dp"
-                            android:adjustViewBounds="true"
-                            android:elevation="12dp"
-                            android:fadingEdge="horizontal|vertical"
-                            android:keepScreenOn="true"
-                            android:translationZ="4dp" />
-
-                    </android.support.v7.widget.CardView>
-
-                    <android.support.v7.widget.CardView
-                        android:id="@+id/ResultCard"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="300dp"
                         android:layout_gravity="center|top"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?android:attr/selectableItemBackground"
+                        android:layout_margin="4dp"
+                        android:adjustViewBounds="true"
+                        android:elevation="12dp"
+                        android:fadingEdge="horizontal|vertical"
+                        android:keepScreenOn="true"
+                        android:translationZ="4dp" />
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/ResultCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|top"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    app:cardBackgroundColor="@color/resultview"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="2dp"
+                    app:cardUseCompatPadding="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
                         android:gravity="center"
-                        android:orientation="horizontal"
-                        app:cardBackgroundColor="@color/resultview"
-                        app:cardCornerRadius="4dp"
-                        app:cardElevation="2dp"
-                        app:cardUseCompatPadding="true">
+                        android:orientation="horizontal">
 
-                        <LinearLayout
+                        <com.mindorks.tensorflowexample.RoundImageView
+                            android:id="@+id/imageViewResult"
+                            android:layout_width="75dp"
+                            android:layout_height="75dp"
+                            android:background="@drawable/shape_corner"
+                            android:contentDescription="@string/recognizeresult"
+                            android:requiresFadingEdge="horizontal|vertical"
+                            android:scaleType="center"
+                            app:elevation="12dp" />
+
+                        <TextView
+                            android:id="@+id/textViewResult"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="4dp"
+                            android:layout_height="80dp"
+                            android:background="@drawable/shape_corner"
+                            android:fadeScrollbars="false"
+                            android:fontFamily="monospace"
                             android:gravity="center"
-                            android:orientation="horizontal">
+                            android:maxLines="10"
+                            android:scrollbars="vertical"
+                            android:textColor="@android:color/black" />
 
-                            <com.mindorks.tensorflowexample.RoundImageView
-                                android:id="@+id/imageViewResult"
-                                android:layout_width="75dp"
-                                android:layout_height="75dp"
-                                android:background="@drawable/shape_corner"
-                                android:contentDescription="@string/recognizeresult"
-                                android:requiresFadingEdge="horizontal|vertical"
-                                android:scaleType="center"
-                                app:elevation="12dp" />
+                    </LinearLayout>
 
-                            <TextView
-                                android:id="@+id/textViewResult"
-                                android:layout_width="match_parent"
-                                android:layout_height="80dp"
-                                android:background="@drawable/shape_corner"
-                                android:fadeScrollbars="false"
-                                android:fontFamily="monospace"
-                                android:gravity="center"
-                                android:maxLines="10"
-                                android:scrollbars="vertical"
-                                android:textColor="@android:color/black" />
-
-                        </LinearLayout>
-
-                    </android.support.v7.widget.CardView>
-
-                </LinearLayout>
+                </android.support.v7.widget.CardView>
 
 
                 <LinearLayout
@@ -163,7 +157,7 @@
 
                 </LinearLayout>
 
-            </FrameLayout>
+            </LinearLayout>
 
             <!-- 侧滑菜单内容 -->
 

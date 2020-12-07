@@ -73,4 +73,10 @@ public class AboutActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        AboutActivity.this.finish();
+    }
+
 }

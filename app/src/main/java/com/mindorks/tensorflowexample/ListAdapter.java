@@ -12,11 +12,18 @@ import java.util.List;
 
 public class ListAdapter extends ArrayAdapter<Litem> {
     private int resourceId;
+    private List<Litem> listobject;
 
     // 适配器的构造函数，把要适配的数据传入这里
     ListAdapter(Context context, int textViewResourceId, List<Litem> objects) {
         super(context, textViewResourceId, objects);
         resourceId = textViewResourceId;
+        listobject = objects;
+    }
+
+    @Override
+    public Litem getItem(int position) {
+        return listobject.get(position);
     }
 
     // convertView 参数用于将之前加载好的布局进行缓存

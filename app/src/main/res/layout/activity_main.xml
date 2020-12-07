@@ -35,131 +35,113 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <FrameLayout
+            <LinearLayout
                 android:id="@+id/activity_main"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/mainview"
-                android:fadingEdge="horizontal|vertical"
                 android:fadingEdgeLength="16dp"
+                android:focusable="auto"
+                android:orientation="vertical"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingBottom="@dimen/activity_vertical_margin"
                 tools:context="com.mindorks.tensorflowexample.MainActivity">
 
-                <LinearLayout
+                <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <android.support.v7.widget.CardView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="start"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center"
-                        app:cardBackgroundColor="@color/resultview"
-                        app:cardCornerRadius="4dp"
-                        app:cardElevation="2dp"
-                        app:cardUseCompatPadding="true">
-
-                        <com.wonderkiln.camerakit.CameraView
-                            android:id="@+id/cameraView"
-                            android:layout_width="match_parent"
-                            android:layout_height="300dp"
-                            android:layout_gravity="center|top"
-                            android:layout_margin="4dp"
-                            android:adjustViewBounds="true"
-                            android:fadingEdge="horizontal|vertical"
-                            android:keepScreenOn="true" />
-
-                    </android.support.v7.widget.CardView>
-
-                    <android.support.v7.widget.CardView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center|top"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?android:attr/selectableItemBackground"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        app:cardBackgroundColor="@color/resultview"
-                        app:cardCornerRadius="4dp"
-                        app:cardElevation="2dp"
-                        app:cardUseCompatPadding="true">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="4dp"
-                            android:gravity="center"
-                            android:orientation="horizontal">
-
-                            <com.mindorks.tensorflowexample.RoundImageView
-                                android:id="@+id/imageViewResult"
-                                android:layout_width="75dp"
-                                android:layout_height="75dp"
-                                android:background="@drawable/shape_corner"
-                                android:contentDescription="@string/recognizeresult"
-                                android:requiresFadingEdge="horizontal|vertical"
-                                android:scaleType="center"
-                                app:elevation="12dp" />
-
-                            <TextView
-                                android:id="@+id/textViewResult"
-                                android:layout_width="match_parent"
-                                android:layout_height="80dp"
-                                android:background="@drawable/shape_corner"
-                                android:fadeScrollbars="false"
-                                android:fontFamily="monospace"
-                                android:gravity="center"
-                                android:maxLines="10"
-                                android:scrollbars="vertical"
-                                android:textColor="@android:color/black" />
-
-                        </LinearLayout>
-
-                    </android.support.v7.widget.CardView>
-
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|center"
-                    android:background="@drawable/shape_corner"
+                    android:layout_gravity="start"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:gravity="center"
-                    android:orientation="vertical"
-                    tools:visibility="visible">
+                    app:cardBackgroundColor="@color/resultview"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="2dp"
+                    app:cardUseCompatPadding="true">
 
-                    <Button
-                        android:id="@+id/btnToggleCamera"
-                        style="@style/Widget.AppCompat.Button.Colored"
+                    <com.wonderkiln.camerakit.CameraView
+                        android:id="@+id/cameraView"
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_gravity="bottom|center"
-                        android:text="@string/toggle_camera"
-                        android:textAllCaps="false"
-                        android:textColor="@android:color/white" />
+                        android:layout_height="300dp"
+                        android:layout_gravity="center|top"
+                        android:layout_margin="4dp"
+                        android:adjustViewBounds="true"
+                        android:fadingEdge="horizontal|vertical"
+                        android:keepScreenOn="true" />
 
-                    <Button
-                        android:id="@+id/btnDetectObject"
-                        style="@style/Widget.AppCompat.Button.Colored"
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|top"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    app:cardBackgroundColor="@color/resultview"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="2dp"
+                    app:cardUseCompatPadding="true">
+
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_gravity="bottom|center"
-                        android:text="@string/detect_object"
-                        android:textAllCaps="false"
-                        android:textColor="@android:color/white"
-                        android:visibility="invisible" />
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
 
-                </LinearLayout>
+                        <com.mindorks.tensorflowexample.RoundImageView
+                            android:id="@+id/imageViewResult"
+                            android:layout_width="75dp"
+                            android:layout_height="75dp"
+                            android:background="@drawable/shape_corner"
+                            android:contentDescription="@string/recognizeresult"
+                            android:requiresFadingEdge="horizontal|vertical"
+                            android:scaleType="center"
+                            app:elevation="12dp" />
 
-            </FrameLayout>
+                        <TextView
+                            android:id="@+id/textViewResult"
+                            android:layout_width="match_parent"
+                            android:layout_height="80dp"
+                            android:background="@drawable/shape_corner"
+                            android:fadeScrollbars="false"
+                            android:fontFamily="monospace"
+                            android:gravity="center"
+                            android:maxLines="10"
+                            android:scrollbars="vertical"
+                            android:textColor="@android:color/black" />
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <Button
+                    android:id="@+id/btnToggleCamera"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_gravity="bottom|center"
+                    android:text="@string/toggle_camera"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white" />
+
+                <Button
+                    android:id="@+id/btnDetectObject"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_gravity="bottom|center"
+                    android:text="@string/detect_object"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    android:visibility="invisible" />
+
+            </LinearLayout>
 
             <!-- 侧滑菜单内容 -->
 
@@ -175,7 +157,8 @@
                 <ListView
                     android:id="@+id/list_view"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:entries="@array/sideList">
 
                 </ListView>
 

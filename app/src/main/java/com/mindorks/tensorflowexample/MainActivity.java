@@ -57,19 +57,19 @@ import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int INPUT_SIZE = 224;
-    private static final int IMAGE_MEAN = 117;
-    private static final float IMAGE_STD = 1;
-    private static final String INPUT_NAME = "input";
-    private static final String OUTPUT_NAME = "output";
+    static final int INPUT_SIZE = 224;
+    static final int IMAGE_MEAN = 117;
+    static final float IMAGE_STD = 1;
+    static final String INPUT_NAME = "input";
+    static final String OUTPUT_NAME = "output";
 
-    private static final String MODEL_FILE = "file:///android_asset/tensorflow_inception_graph.pb";
-    private static final String LABEL_FILE =
+    static String MODEL_FILE = "file:///android_asset/tensorflow_inception_graph.pb";
+    static String LABEL_FILE =
             "file:///android_asset/imagenet_comp_graph_label_strings.txt";
     private String rss = "";
 
-    private Classifier classifier;
-    private Executor executor = Executors.newSingleThreadExecutor();
+    static Classifier classifier;
+    static Executor executor = Executors.newSingleThreadExecutor();
     private Executor cached_executor = Executors.newCachedThreadPool();
     private TextView textViewResult;
     private Button btnDetectObject, btnToggleCamera;
@@ -81,10 +81,13 @@ public class MainActivity extends AppCompatActivity {
     private CardView RsltCard;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-
+    private Litem imgclsfy = new Litem("Image Classify", R.drawable.baseline_image_black_48);
+    private Litem objdct = new Litem("Object Detection", R.drawable.baseline_nature_people_black_48);
+    private Litem sets = new Litem("Settings", R.drawable.baseline_settings_black_48);
+    private Litem abt = new Litem("About", R.drawable.baseline_info_black_48);
     // List用于存储数据
-    private List<Litem> sideList = new ArrayList<Litem>() {
-
+    //在res/layout的string.xml中添加数组资源的名称
+    static ArrayList<Litem> sideList = new ArrayList<Litem>() {
     };
 
 
@@ -98,15 +101,20 @@ public class MainActivity extends AppCompatActivity {
         RsltCard = findViewById(R.id.ResultCard);
 
         for (int i = 0; i < 3; i++) {
-            sideList.add(new Litem("Image Classify", R.drawable.baseline_image_black_48));
-            sideList.add(new Litem("Object Detection", R.drawable.baseline_nature_people_black_48));
-            sideList.add(new Litem("Settings", R.drawable.baseline_settings_black_48));
-            sideList.add(new Litem("About", R.drawable.baseline_info_black_48));
+            sideList.add(imgclsfy);
+            sideList.add(objdct);
+            sideList.add(sets);
+            sideList.add(abt);
         }
+        for (int i = 0; i < sideList.size(); i++){
+            System.out.println("sideList:" + sideList.get(i).getName() + sideList.get(i).getImageId());
+        }
+
 
         ListAdapter list_adapter = new ListAdapter(MainActivity.this, R.layout.list_item, sideList);
         // 把适配器给ListView
         listView.setAdapter(list_adapter);
+        listView.setClickable(false);
 
         // 为ListView注册一个监听器，当用户点击了ListView中的任何一个子项时，就会回调onItemClick()方法
         // 在这个方法中可以通过position参数判断出用户点击的是那一个子项
@@ -328,6 +336,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 btnDetectObject.setVisibility(View.VISIBLE);
+                listView.setClickable(true);
                 fabRestore.show();
             }
         });

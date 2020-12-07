@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/model_scrl"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">
+
+    <RadioGroup
+        android:id="@+id/model_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="16dp"
+        android:gravity="start"
+        android:orientation="vertical"
+        android:padding="4dp">
+
+        <RadioButton
+            android:id="@+id/Default_R"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:text="@string/Default_m"
+            android:textStyle="bold" />
+
+        <RadioButton
+            android:id="@+id/Mobile_R"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:text="@string/Mobile_224"
+            android:textStyle="bold" />
+
+        <RadioButton
+            android:id="@+id/Efficient_R"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:text="@string/EfficientB0"
+            android:textStyle="bold" />
+
+    </RadioGroup>
+
+</ScrollView>
+
+
