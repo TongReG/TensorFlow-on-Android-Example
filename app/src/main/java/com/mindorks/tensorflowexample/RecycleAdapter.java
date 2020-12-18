@@ -9,28 +9,34 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyHolder> {
 
     private final LayoutInflater mLayoutInflater;
-    private static Ritem chmodel =new Ritem("Choose Model", R.drawable.baseline_input_black_36);
-    private static Ritem chout =new Ritem("Change Output", R.drawable.baseline_logout_black_36);
-    private static Ritem mthread =new Ritem("Multi-threading", R.drawable.baseline_speed_black_36);
-    private static Ritem ret =new Ritem("Return", R.drawable.baseline_arrow_back_black_36);
+    private static Ritem chmodel = new Ritem("Choose Model", R.drawable.baseline_input_black_36);
+    private static Ritem chout = new Ritem("Change Output", R.drawable.baseline_logout_black_36);
+    private static Ritem mthread = new Ritem("Multi-threading", R.drawable.baseline_speed_black_36);
+    private static Ritem ret = new Ritem("Return", R.drawable.baseline_arrow_back_black_36);
 
     static ArrayList<Ritem> mData = new ArrayList<Ritem>() {
     };
+    final List<Ritem> mDataSyn = Collections.synchronizedList(mData);
 
 
     public RecycleAdapter(Context context) {
         mLayoutInflater = LayoutInflater.from(context);
 
-        for (int i = 0; i < 3; i++) {
-            mData.add(chmodel);
-            mData.add(chout);
-            mData.add(mthread);
-            mData.add(ret);
+        synchronized (mDataSyn) {
+            for (int i = 0; i < 3; i++) {
+                mDataSyn.add(chmodel);
+                mDataSyn.add(chout);
+                mDataSyn.add(mthread);
+                mDataSyn.add(ret);
+            }
         }
+
     }
 
     @Override
@@ -41,9 +47,9 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyHolder
 
     @Override
     public void onBindViewHolder(final RecycleAdapter.MyHolder holder, final int pos) {
-        holder.mTextView.setText(mData.get(pos).getName());
-        holder.mTextViewtwo.setText(mData.get(pos).getState());
-        holder.mImageView.setImageResource(mData.get(pos).getImageId());
+        holder.mTextView.setText(mDataSyn.get(pos).getName());
+        holder.mTextViewtwo.setText(mDataSyn.get(pos).getState());
+        holder.mImageView.setImageResource(mDataSyn.get(pos).getImageId());
         if (mOnItemClickListener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

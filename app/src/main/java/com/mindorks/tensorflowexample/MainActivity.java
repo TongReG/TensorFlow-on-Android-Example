@@ -43,6 +43,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.wonderkiln.camerakit.CameraKit;
 import com.wonderkiln.camerakit.CameraKitError;
 import com.wonderkiln.camerakit.CameraKitEvent;
 import com.wonderkiln.camerakit.CameraKitEventListener;
@@ -81,13 +82,13 @@ public class MainActivity extends AppCompatActivity {
     private CardView RsltCard;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-    private Litem imgclsfy = new Litem("Image Classify", R.drawable.baseline_image_black_48);
-    private Litem objdct = new Litem("Object Detection", R.drawable.baseline_nature_people_black_48);
-    private Litem sets = new Litem("Settings", R.drawable.baseline_settings_black_48);
-    private Litem abt = new Litem("About", R.drawable.baseline_info_black_48);
+     Litem imgclsfy = new Litem("Image Classify", R.drawable.baseline_image_black_48);
+     Litem objdct = new Litem("Object Detection", R.drawable.baseline_nature_people_black_48);
+     Litem sets = new Litem("Settings", R.drawable.baseline_settings_black_48);
+     Litem abt = new Litem("About", R.drawable.baseline_info_black_48);
     // List用于存储数据
     //在res/layout的string.xml中添加数组资源的名称
-    static ArrayList<Litem> sideList = new ArrayList<Litem>() {
+    final ArrayList<Litem> sideList = new ArrayList<Litem>() {
     };
 
 
@@ -101,10 +102,10 @@ public class MainActivity extends AppCompatActivity {
         RsltCard = findViewById(R.id.ResultCard);
 
         for (int i = 0; i < 3; i++) {
-            sideList.add(imgclsfy);
-            sideList.add(objdct);
-            sideList.add(sets);
-            sideList.add(abt);
+            sideList.add(0,imgclsfy);
+            sideList.add(1,objdct);
+            sideList.add(2,sets);
+            sideList.add(3,abt);
         }
         for (int i = 0; i < sideList.size(); i++){
             System.out.println("sideList:" + sideList.get(i).getName() + sideList.get(i).getImageId());
@@ -156,7 +157,8 @@ public class MainActivity extends AppCompatActivity {
 
         sideMenuDrawable();
 
-
+        cameraView.setFocus(CameraKit.Constants.FOCUS_TAP_WITH_MARKER);
+        cameraView.setFlash(CameraKit.Constants.FLASH_AUTO);
         cameraView.addCameraKitListener(new CameraKitEventListener() {
             @Override
             public void onEvent(CameraKitEvent cameraKitEvent) {
@@ -204,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
         cameraView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Toast.makeText(MainActivity.this,"CameraviewClick",Toast.LENGTH_SHORT).show();
             }
         });
 
