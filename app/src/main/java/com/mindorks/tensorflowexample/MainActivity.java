@@ -23,6 +23,7 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 //import androidx.appcompat.app.AppCompatActivity;
+import android.os.SystemClock;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -82,10 +83,10 @@ public class MainActivity extends AppCompatActivity {
     private CardView RsltCard;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-     Litem imgclsfy = new Litem("Image Classify", R.drawable.baseline_image_black_48);
-     Litem objdct = new Litem("Object Detection", R.drawable.baseline_nature_people_black_48);
-     Litem sets = new Litem("Settings", R.drawable.baseline_settings_black_48);
-     Litem abt = new Litem("About", R.drawable.baseline_info_black_48);
+    Litem imgclsfy = new Litem("Image Classify", R.drawable.baseline_image_black_48);
+    Litem objdct = new Litem("Object Detection", R.drawable.baseline_nature_people_black_48);
+    Litem sets = new Litem("Settings", R.drawable.baseline_settings_black_48);
+    Litem abt = new Litem("About", R.drawable.baseline_info_black_48);
     // List用于存储数据
     //在res/layout的string.xml中添加数组资源的名称
     final ArrayList<Litem> sideList = new ArrayList<Litem>() {
@@ -102,12 +103,12 @@ public class MainActivity extends AppCompatActivity {
         RsltCard = findViewById(R.id.ResultCard);
 
         for (int i = 0; i < 3; i++) {
-            sideList.add(0,imgclsfy);
-            sideList.add(1,objdct);
-            sideList.add(2,sets);
-            sideList.add(3,abt);
+            sideList.add(0, imgclsfy);
+            sideList.add(1, objdct);
+            sideList.add(2, sets);
+            sideList.add(3, abt);
         }
-        for (int i = 0; i < sideList.size(); i++){
+        for (int i = 0; i < sideList.size(); i++) {
             System.out.println("sideList:" + sideList.get(i).getName() + sideList.get(i).getImageId());
         }
 
@@ -177,12 +178,17 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onImage(CameraKitImage cameraKitImage) {
+                long t1 = System.currentTimeMillis();
 
                 Bitmap bitmap = cameraKitImage.getBitmap();
+
+                long t2 = System.currentTimeMillis();
 
                 bitmap = Bitmap.createScaledBitmap(bitmap, INPUT_SIZE, INPUT_SIZE, false);
 
                 imageViewResult.setImageBitmap(bitmap);
+
+                long t3 = System.currentTimeMillis();
 
                 final Bitmap finalBitmap = bitmap;
                 cached_executor.execute(new Runnable() {
@@ -195,6 +201,15 @@ public class MainActivity extends AppCompatActivity {
 
                 textViewResult.setText(rss);
 
+                long t4 = System.currentTimeMillis();
+
+                long captureTime = t2 - t1;
+                long execTime = t4 - t3;
+                long totalTime = t4 - t1;
+                String timestring = "CaptureTime:" + captureTime + " ExecTime:" + execTime + " Total:" + totalTime;
+
+                Toast.makeText(MainActivity.this, timestring, Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
@@ -206,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
         cameraView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this,"CameraviewClick",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "CameraviewClick", Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -63,7 +63,6 @@ dependencies {
     //implementation 'androidx.appcompat:appcompat:1.2.0'
     //implementation 'com.google.android.material:material:1.2.1'
     testImplementation 'junit:junit:4.13'
-    implementation 'org.tensorflow:tensorflow-android:1.2.0'
     implementation 'com.wonderkiln:camerakit:0.13.5'
     //Fragment supports only newer than support 27.1.0+
     implementation 'com.android.support:appcompat-v7:27.1.1'
@@ -71,4 +70,5 @@ dependencies {
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support:animated-vector-drawable:27.1.1'
     implementation 'com.android.support:exifinterface:27.1.1'
+    implementation 'org.tensorflow:tensorflow-android:1.13.1'
 }

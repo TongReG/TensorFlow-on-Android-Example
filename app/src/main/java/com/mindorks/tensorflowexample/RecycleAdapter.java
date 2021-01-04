@@ -29,11 +29,13 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyHolder
         mLayoutInflater = LayoutInflater.from(context);
 
         synchronized (mDataSyn) {
-            for (int i = 0; i < 3; i++) {
-                mDataSyn.add(chmodel);
-                mDataSyn.add(chout);
-                mDataSyn.add(mthread);
-                mDataSyn.add(ret);
+            if (mDataSyn.isEmpty()) {
+                for (int i = 0; i < 2; i++) {
+                    mDataSyn.add(chmodel);
+                    mDataSyn.add(chout);
+                    mDataSyn.add(mthread);
+                    mDataSyn.add(ret);
+                }
             }
         }
 
