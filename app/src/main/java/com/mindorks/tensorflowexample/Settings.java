@@ -5,7 +5,6 @@ package com.mindorks.tensorflowexample;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-//import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -14,9 +13,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.PopupWindow;
-import android.widget.RadioGroup;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import static com.mindorks.tensorflowexample.MainActivity.IMAGE_MEAN;
@@ -26,16 +22,20 @@ import static com.mindorks.tensorflowexample.MainActivity.INPUT_SIZE;
 import static com.mindorks.tensorflowexample.MainActivity.LABEL_FILE;
 import static com.mindorks.tensorflowexample.MainActivity.MODEL_FILE;
 import static com.mindorks.tensorflowexample.MainActivity.OUTPUT_NAME;
+import static com.mindorks.tensorflowexample.MainActivity.activityMgr;
 
 public class Settings extends AppCompatActivity {
 
-    //@RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    RecycleAdapter rec_adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        activityMgr.pushActivity(this);
 
         final AlertDialog.Builder model_builder = new AlertDialog.Builder(Settings.this);
         model_builder.setTitle(R.string.change_model);
@@ -65,7 +65,7 @@ public class Settings extends AppCompatActivity {
                     default:
                         break;
                 }
-                Toast.makeText(getApplicationContext(), item, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Choose " + item, Toast.LENGTH_LONG).show();
                 //把对话框关闭
                 dialog.dismiss();
             }
@@ -76,21 +76,27 @@ public class Settings extends AppCompatActivity {
         // use this setting to improve performance if you know that changes
         // in content do not change the rec_item size of the RecyclerView
         rec.setHasFixedSize(true);
-        //rec.addItemDecoration();
-        RecycleAdapter rec_adapter = new RecycleAdapter(this);
+
+        rec_adapter = new RecycleAdapter(this);
         rec.setAdapter(rec_adapter);
         this.registerForContextMenu(rec);
+
+        rec_adapter.clearData();
+        rec_adapter.addData(0, MenuItemUtils.chmodel);
+        rec_adapter.addData(1, MenuItemUtils.chout);
+        rec_adapter.addData(2, MenuItemUtils.mthread);
+        rec_adapter.addData(3, MenuItemUtils.ret);
+
         rec_adapter.setOnItemClickListener(new RecycleAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Ritem psn = RecycleAdapter.mData.get(position);
-                Toast.makeText(Settings.this, "Click " + position, Toast.LENGTH_SHORT).show();
-                if (psn.getName().equals("Return")) {
+                Ritem Item = RecycleAdapter.getItem(position);
+                Toast.makeText(Settings.this, "Click " + Item.getName(), Toast.LENGTH_SHORT).show();
+                if (Item.getName().equals("Return")) {
                     Settings.this.finish();
-                } else if (psn.getName().equals("Choose Model")) {
+                } else if (Item.getName().equals("Choose Model")) {
                     model_builder.show();
                 }
-
             }
 
             @Override
@@ -98,33 +104,6 @@ public class Settings extends AppCompatActivity {
 
             }
         });
-
-
-   /*   RadioGroup mRadioGroup = findViewById(R.id.model_group);
-        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case R.id.Default_R:
-                        MODEL_FILE = "file:///android_asset/tensorflow_inception_graph.pb";
-                        LABEL_FILE = "file:///android_asset/imagenet_comp_graph_label_strings.txt";
-                        reloadTensorflowModel();
-                        break;
-                    case R.id.Mobile_R:
-                        MODEL_FILE = "file:///android_asset/tf1_imagenet_mobilenet_v1_100_224_classification.pb";
-                        LABEL_FILE = "file:///android_asset/ImageNetLabels.txt";
-                        reloadTensorflowModel();
-                        break;
-                    case R.id.Efficient_R:
-                        MODEL_FILE = "file:///android_asset/tf1_efficientnet_b0_classification.pb";
-                        LABEL_FILE = "file:///android_asset/ImageNetLabels.txt";
-                        reloadTensorflowModel();
-                        break;
-                    default:
-                        break;
-                }
-            }
-        });*/
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -156,5 +135,13 @@ public class Settings extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Settings.this.finish();
+        activityMgr.popActivity();
+        MainActivity.restoreSideMenuItem(rec_adapter);
     }
 }

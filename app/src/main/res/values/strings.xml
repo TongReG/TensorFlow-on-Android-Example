@@ -26,10 +26,11 @@
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
+    <string name="next">Continue</string>
+    <string name="BacktoFirstFragment">RETRY</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="Permission_fragment">Welcome to Tensorflow APP. Camera Permission is required for basic function and Please allow the request of Camera Device.</string>
+    <string name="Permission_Failed">Permission require failed. Exit APP or click the button to Retry.</string>>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="action_share">Share</string>
 
@@ -41,21 +42,5 @@
     <string name="Default_m">Default (ImageNet_Inception_V1)</string>
     <string name="Mobile_224">ImageNet_MobileNet_V1_100_224</string>
     <string name="EfficientB0">EfficientNet_b0</string>
-
-    <string-array name = "sideList">   <!--数组资源名称为list 与layout中对应-->
-        <item>第一行</item>
-        <item>第二行</item>
-        <item>第三行</item>
-        <item>第四行</item>
-        <item>第五行</item>
-        <item>第六行</item>
-        <item>第七行</item>
-        <item>第八行</item>
-        <item>第九行</item>
-        <item>第十行</item>
-        <item>第十一行</item>
-        <item>第十二行</item>
-        <item>第十三行</item>
-    </string-array>
 
 </resources>

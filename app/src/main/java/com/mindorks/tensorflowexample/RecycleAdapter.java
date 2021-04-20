@@ -9,36 +9,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyHolder> {
 
-    private final LayoutInflater mLayoutInflater;
-    private static Ritem chmodel = new Ritem("Choose Model", R.drawable.baseline_input_black_36);
-    private static Ritem chout = new Ritem("Change Output", R.drawable.baseline_logout_black_36);
-    private static Ritem mthread = new Ritem("Multi-threading", R.drawable.baseline_speed_black_36);
-    private static Ritem ret = new Ritem("Return", R.drawable.baseline_arrow_back_black_36);
+    private LayoutInflater mLayoutInflater;
 
-    static ArrayList<Ritem> mData = new ArrayList<Ritem>() {
-    };
-    final List<Ritem> mDataSyn = Collections.synchronizedList(mData);
+    private static List<Ritem> mDataSyn = new ArrayList<Ritem>(MenuItemUtils.settingsItemCount + MenuItemUtils.sideItemCount);
 
 
     public RecycleAdapter(Context context) {
         mLayoutInflater = LayoutInflater.from(context);
-
-        synchronized (mDataSyn) {
-            if (mDataSyn.isEmpty()) {
-                for (int i = 0; i < 2; i++) {
-                    mDataSyn.add(chmodel);
-                    mDataSyn.add(chout);
-                    mDataSyn.add(mthread);
-                    mDataSyn.add(ret);
-                }
-            }
-        }
-
     }
 
     @Override
@@ -73,7 +54,7 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyHolder
 
     @Override
     public int getItemCount() {
-        return mData == null ? 0 : mData.size();
+        return mDataSyn == null ? 0 : mDataSyn.size();
     }
 
     public static class MyHolder extends RecyclerView.ViewHolder {
@@ -100,38 +81,26 @@ public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.MyHolder
         this.mOnItemClickListener = mOnItemClickListener;
     }
 
-    public void addData(int position) {
-        //mData.add(position, "hello x");
+    public void addData(int position, Ritem newitem) {
+        mDataSyn.add(position, newitem);
         notifyItemInserted(position);
     }
 
     public void removeData(int position) {
-        mData.remove(position);
+        mDataSyn.remove(position);
         notifyItemRemoved(position);
     }
 
-}
-
-class Ritem {
-    private static int imageId;
-    private static String name;
-    private static String state;
-
-    Ritem(String name, int imageId) {
-        Ritem.name = name;
-        Ritem.imageId = imageId;
-        Ritem.state = "Undefined";
+    public void clearData() {
+        mDataSyn.clear();
     }
 
-    public String getName() {
-        return name;
+    public static Ritem getItem(int position) {
+        return mDataSyn.get(position);
     }
 
-    public String getState() {
-        return name.equals("Return") ? "Return to MainView" : state;
+    public boolean isListEmpty() {
+        return mDataSyn.isEmpty();
     }
 
-    int getImageId() {
-        return imageId;
-    }
 }

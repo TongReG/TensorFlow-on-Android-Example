@@ -16,8 +16,8 @@
         android:id="@+id/rec_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center|end"
         android:layout_margin="8dp"
-        android:layout_gravity="end"
         android:layout_marginEnd="2dp"
         android:layout_marginRight="2dp" />
 
@@ -25,6 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="8dp"
+        android:longClickable="false"
         android:orientation="vertical">
 
         <TextView
@@ -45,6 +46,8 @@
             android:layout_marginLeft="2dp"
             android:gravity="start"
             android:padding="@dimen/rec_padding"
+            android:paddingEnd="48dp"
+            android:paddingRight="48dp"
             android:textSize="12sp" />
 
 

@@ -1,6 +1,5 @@
 package com.mindorks.tensorflowexample;
 
-//import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -12,11 +11,12 @@ import android.widget.RelativeLayout;
 import mehdi.sakout.aboutpage.AboutPage;
 import mehdi.sakout.aboutpage.Element;
 
+import static com.mindorks.tensorflowexample.MainActivity.activityMgr;
+
 public class AboutActivity extends AppCompatActivity {
 
-    private static final String CustomFontPath = "fonts/DejaVu_Sans_Mono_for_Powerline.ttf";
+    private static final String CustomFontPath = "fonts/Droid_Sans_Mono_for_Powerline.otf";
     private static final String DescriptionOne = "TensorFlow on Android";
-    private static final String VersionCode = "Version 1.1 based on Mindorks";
     //private Typeface CustomTypeface;
 
     @Override
@@ -25,7 +25,11 @@ public class AboutActivity extends AppCompatActivity {
         setContentView(R.layout.about);
 
         //CustomTypeface = Typeface.createFromAsset(getAssets(), "fonts/.ttf");
-        Element versionElement = new Element().setTitle(VersionCode);
+        activityMgr.pushActivity(this);
+
+        String verNum = AppInfoUtils.getVersionName(this);
+        String versionCode = "Version" + verNum + "based on Mindorks";
+        Element versionElement = new Element().setTitle(versionCode);
         RelativeLayout relativeLayout = findViewById(R.id.relativeLayout);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -69,13 +73,15 @@ public class AboutActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 return true;
-            default: return true;
+            default:
+                return true;
         }
     }
 
     @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         super.onDestroy();
+        activityMgr.popActivity();
         AboutActivity.this.finish();
     }
 

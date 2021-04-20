@@ -16,31 +16,27 @@
 
 package com.mindorks.tensorflowexample;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-//import androidx.appcompat.app.AppCompatActivity;
-import android.os.SystemClock;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.CardView;
 import android.support.v4.view.MenuItemCompat;
-//import android.support.v4.view.MenuCompat;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,7 +48,6 @@ import com.wonderkiln.camerakit.CameraKitImage;
 import com.wonderkiln.camerakit.CameraKitVideo;
 import com.wonderkiln.camerakit.CameraView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -78,62 +73,75 @@ public class MainActivity extends AppCompatActivity {
     private DragFloatActionButton fabRestore;
     private RoundImageView imageViewResult;
     private CameraView cameraView;
-    private ListView listView;
+    private RecyclerView sideRecView;
     private Toolbar mToolbar;
     private CardView RsltCard;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-    Litem imgclsfy = new Litem("Image Classify", R.drawable.baseline_image_black_48);
-    Litem objdct = new Litem("Object Detection", R.drawable.baseline_nature_people_black_48);
-    Litem sets = new Litem("Settings", R.drawable.baseline_settings_black_48);
-    Litem abt = new Litem("About", R.drawable.baseline_info_black_48);
-    // List用于存储数据
-    //在res/layout的string.xml中添加数组资源的名称
-    final ArrayList<Litem> sideList = new ArrayList<Litem>() {
-    };
+
+    static ActivityMgr activityMgr;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         cameraView = findViewById(R.id.cameraView);
         imageViewResult = findViewById(R.id.imageViewResult);
-        listView = findViewById(R.id.list_view);
         RsltCard = findViewById(R.id.ResultCard);
+        sideRecView = findViewById(R.id.side_recycler);
 
-        for (int i = 0; i < 3; i++) {
-            sideList.add(0, imgclsfy);
-            sideList.add(1, objdct);
-            sideList.add(2, sets);
-            sideList.add(3, abt);
-        }
-        for (int i = 0; i < sideList.size(); i++) {
-            System.out.println("sideList:" + sideList.get(i).getName() + sideList.get(i).getImageId());
-        }
+        activityMgr = ActivityMgr.getActivityManager();
+        activityMgr.pushActivity(MainActivity.this);
 
+        final RecycleAdapter sideRecAdapter = new RecycleAdapter(this);
+        sideRecView.setLayoutManager(new LinearLayoutManager(this));
+        sideRecView.setHasFixedSize(true);
+        sideRecView.setAdapter(sideRecAdapter);
+        this.registerForContextMenu(sideRecView);
+        sideRecView.setClickable(false);
 
-        ListAdapter list_adapter = new ListAdapter(MainActivity.this, R.layout.list_item, sideList);
-        // 把适配器给ListView
-        listView.setAdapter(list_adapter);
-        listView.setClickable(false);
+        MenuItemUtils.init();
+        sideRecAdapter.addData(0, MenuItemUtils.imgclsfy);
+        sideRecAdapter.addData(1, MenuItemUtils.objdct);
+        sideRecAdapter.addData(2, MenuItemUtils.sets);
+        sideRecAdapter.addData(3, MenuItemUtils.abt);
 
-        // 为ListView注册一个监听器，当用户点击了ListView中的任何一个子项时，就会回调onItemClick()方法
-        // 在这个方法中可以通过position参数判断出用户点击的是那一个子项
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        sideRecAdapter.setOnItemClickListener(new RecycleAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Litem pstn = sideList.get(position);
-                Toast.makeText(MainActivity.this, pstn.getName(), Toast.LENGTH_SHORT).show();
-                if (pstn.getName().equals("About")) {
-                    Intent aboutintent = new Intent(MainActivity.this, AboutActivity.class);
-                    startActivity(aboutintent);
-                    cameraView.stop();
-                } else if (pstn.getName().equals("Settings")) {
-                    Intent Setintent = new Intent(MainActivity.this, Settings.class);
-                    startActivity(Setintent);
-                    cameraView.stop();
+            public void onItemClick(View view, int position) {
+                Ritem Item = RecycleAdapter.getItem(position);
+                Toast.makeText(MainActivity.this, "Click " + position, Toast.LENGTH_SHORT).show();
+                switch (Item.getName()) {
+                    case "About":
+                        Intent AboutActivity = new Intent(getApplicationContext(), AboutActivity.class);
+                        startActivity(AboutActivity);
+                        cameraView.stop();
+                        break;
+                    case "Settings":
+                        Intent SetActivity = new Intent(getApplicationContext(), Settings.class);
+                        startActivity(SetActivity);
+                        cameraView.stop();
+                        break;
+                    case "Image Classify":
+                        String topActivityName = activityMgr.peekActivity().getLocalClassName();
+/*                    if (!topActivityName.equals("MainActivity")) {
+                        Intent Main = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(Main);
+                        am.popActivity(am.peekActivity().getClass());
+                    }*/
+                        Toast.makeText(MainActivity.this, "Now:" + topActivityName, Toast.LENGTH_SHORT).show();
+                        break;
+                    case "Object Detection":
+                        //TODO: Add Object Detection Activity.
+                        break;
                 }
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+
             }
         });
 
@@ -157,6 +165,8 @@ public class MainActivity extends AppCompatActivity {
                 R.string.drawer_close);
 
         sideMenuDrawable();
+
+        //TODO: Deprecate CameraKit API.
 
         cameraView.setFocus(CameraKit.Constants.FOCUS_TAP_WITH_MARKER);
         cameraView.setFlash(CameraKit.Constants.FLASH_AUTO);
@@ -270,10 +280,10 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.sidemenu, menu);
-        MenuItem shareitem = menu.findItem(R.id.share_button);
+        MenuItem shareItem = menu.findItem(R.id.share_button);
         // https://blog.csdn.net/j086924/article/details/81233212
-        if (shareitem != null) {
-            ShareActionProvider SharePd = (ShareActionProvider) MenuItemCompat.getActionProvider(shareitem);
+        if (shareItem != null) {
+            ShareActionProvider SharePd = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
             SharePd.setShareIntent(getDefaultIntent());
             /*if (SharePd == null) {
                 menu.removeItem(R.id.share_button);
@@ -318,6 +328,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        activityMgr.popActivity();
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -353,7 +364,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 btnDetectObject.setVisibility(View.VISIBLE);
-                listView.setClickable(true);
+                sideRecView.setClickable(true);
                 fabRestore.show();
             }
         });
@@ -377,12 +388,21 @@ public class MainActivity extends AppCompatActivity {
         List<ResolveInfo> infolist = pm.queryIntentActivities(intent, 0);
         if (!infolist.isEmpty()) {
             intent.setType("image/*");
-            intent.putExtra(Intent.EXTRA_TEXT, "Want to join me for share? 这是要发送的文本");
+            intent.putExtra(Intent.EXTRA_TEXT, rss);
+            Toast.makeText(MainActivity.this, "Default sharing type is Image.", Toast.LENGTH_SHORT).show();
         } else {
             intent.setType("text/plain");
-            intent.putExtra(Intent.EXTRA_TEXT, "No Sharing App Found.");
-            Toast.makeText(MainActivity.this, "No Sharing App Found", Toast.LENGTH_SHORT).show();
+            intent.putExtra(Intent.EXTRA_TEXT, rss);
+            Toast.makeText(MainActivity.this, "No Sharing App Found.", Toast.LENGTH_SHORT).show();
         }
         return intent;
+    }
+
+    protected static void restoreSideMenuItem(RecycleAdapter adapter) {
+        adapter.clearData();
+        adapter.addData(0, MenuItemUtils.imgclsfy);
+        adapter.addData(1, MenuItemUtils.objdct);
+        adapter.addData(2, MenuItemUtils.sets);
+        adapter.addData(3, MenuItemUtils.abt);
     }
 }
