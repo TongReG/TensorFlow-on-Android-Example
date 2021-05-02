@@ -41,6 +41,10 @@ public class AutoFitTextureView extends TextureView {
         requestLayout();
     }
 
+    /**
+     * We always want the width to fill the entire TextureView to ensure the upper view won't be able
+     * to show any blank space.
+     */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -50,9 +54,9 @@ public class AutoFitTextureView extends TextureView {
             setMeasuredDimension(width, height);
         } else {
             if (width < height * mRatioWidth / mRatioHeight) {
-                setMeasuredDimension(width, width * mRatioHeight / mRatioWidth);
-            } else {
                 setMeasuredDimension(height * mRatioWidth / mRatioHeight, height);
+            } else {
+                setMeasuredDimension(width, width * mRatioHeight / mRatioWidth);
             }
         }
     }
