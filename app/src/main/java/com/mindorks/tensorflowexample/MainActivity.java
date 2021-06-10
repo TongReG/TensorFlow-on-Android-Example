@@ -120,29 +120,73 @@ public class MainActivity extends AppCompatActivity {
         fabRestore = findViewById(R.id.floatingActionButton);
 
         mToolbar = findViewById(R.id.toolbar);
-        // toolbar.setLogo(R.drawable.ic_launcher);
-        //mToolbar.setTitle("Rocko"); 标题的文字需在setSupportActionBar之前，不然会无效
-        // toolbar.setSubtitle("副标题");
+        /*
+            toolbar.setLogo(R.drawable.ic_launcher);
+            toolbar.setTitle("Rocko"); 标题的文字需在setSupportActionBar之前，不然会无效
+            toolbar.setSubtitle("副标题");
+        */
         setSupportActionBar(mToolbar);
-        /* 这些通过ActionBar来设置也是一样的，注意要在setSupportActionBar(toolbar);之后，不然就报错了 */
-        // getSupportActionBar().setTitle("标题");
-        // getSupportActionBar().setSubtitle("副标题");
+        /*
+            这些通过ActionBar来设置也是一样的，注意要在setSupportActionBar(toolbar);之后，不然就报错了
+            getSupportActionBar().setTitle("标题");
+            getSupportActionBar().setSubtitle("副标题");
+        */
         mDrawerLayout = findViewById(R.id.drawer);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.drawer_open,
                 R.string.drawer_close);
 
         sideMenuDrawable();
 
+        sideRecAdapter.setOnItemClickListener(new RecycleAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Ritem Item = RecycleAdapter.getItem(position);
+                Toast.makeText(MainActivity.this, "Click " + position, Toast.LENGTH_SHORT).show();
+                switch (Item.getName()) {
+                    case "About":
+                        Intent AboutActivity = new Intent(getApplicationContext(), AboutActivity.class);
+                        startActivity(AboutActivity);
+                        SuspendCamera();
+                        break;
+                    case "Settings":
+                        Intent SetActivity = new Intent(getApplicationContext(), Settings.class);
+                        startActivity(SetActivity);
+                        SuspendCamera();
+                        break;
+                    case "Image Classify":
+                        String topActivityName = activityMgr.peekActivity().getLocalClassName();
+                    /*
+                    if (!topActivityName.equals("MainActivity")) {
+                        Intent Main = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(Main);
+                        am.popActivity(am.peekActivity().getClass());
+                    }
+                    */
+                        Toast.makeText(MainActivity.this, "Now:" + topActivityName, Toast.LENGTH_SHORT).show();
+                        break;
+                    case "Object Detection":
+                        //TODO: Add Object Detection Activity.
+                        break;
+                }
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+
+            }
+        });
+
         //TODO: Deprecate CameraKit API.
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            ISKITENABLE = false;
 
             camera_fragment = Camera2Utils.newInstance();
             if (null == savedInstanceState) {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.CameraContainer, camera_fragment)
                         .commit();
-                camera_fragment.setFlash();
             }
 
             btnDetectObject.setOnClickListener(new View.OnClickListener() {
@@ -153,15 +197,14 @@ public class MainActivity extends AppCompatActivity {
                     Bitmap mBitmap = camera_fragment.captureBitmap();
 
                     if (mBitmap != null) {
-                        Bitmap bitmap = Bitmap.createScaledBitmap(mBitmap, INPUT_SIZE, INPUT_SIZE, false);
+                        final Bitmap bitmap = Bitmap.createScaledBitmap(mBitmap, INPUT_SIZE, INPUT_SIZE, true);
 
                         imageViewResult.setImageBitmap(bitmap);
 
-                        final Bitmap finalBitmap = bitmap;
                         cached_executor.execute(new Runnable() {
                             @Override
                             public void run() {
-                                final List<Classifier.Recognition> results = classifier.recognizeImage(finalBitmap);
+                                final List<Classifier.Recognition> results = classifier.recognizeImage(bitmap);
                                 rss = results.toString();
                             }
                         });
@@ -180,43 +223,6 @@ public class MainActivity extends AppCompatActivity {
             ISKITENABLE = true;
 
             cameraView = findViewById(R.id.cameraView);
-
-            sideRecAdapter.setOnItemClickListener(new RecycleAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(View view, int position) {
-                    Ritem Item = RecycleAdapter.getItem(position);
-                    Toast.makeText(MainActivity.this, "Click " + position, Toast.LENGTH_SHORT).show();
-                    switch (Item.getName()) {
-                        case "About":
-                            Intent AboutActivity = new Intent(getApplicationContext(), AboutActivity.class);
-                            startActivity(AboutActivity);
-                            cameraView.stop();
-                            break;
-                        case "Settings":
-                            Intent SetActivity = new Intent(getApplicationContext(), Settings.class);
-                            startActivity(SetActivity);
-                            cameraView.stop();
-                            break;
-                        case "Image Classify":
-                            String topActivityName = activityMgr.peekActivity().getLocalClassName();
-/*                    if (!topActivityName.equals("MainActivity")) {
-                        Intent Main = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(Main);
-                        am.popActivity(am.peekActivity().getClass());
-                    }*/
-                            Toast.makeText(MainActivity.this, "Now:" + topActivityName, Toast.LENGTH_SHORT).show();
-                            break;
-                        case "Object Detection":
-                            //TODO: Add Object Detection Activity.
-                            break;
-                    }
-                }
-
-                @Override
-                public void onItemLongClick(View view, int position) {
-
-                }
-            });
 
             cameraView.setFocus(CameraKit.Constants.FOCUS_TAP_WITH_MARKER);
             cameraView.setFlash(CameraKit.Constants.FLASH_AUTO);
@@ -435,6 +441,12 @@ public class MainActivity extends AppCompatActivity {
                 mDrawerLayout.setDrawerListener(mDrawerToggle);
             }
         });
+    }
+
+    private void SuspendCamera() {
+        if (ISKITENABLE) {
+            cameraView.stop();
+        }
     }
 
     private Intent getDefaultIntent() {

@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mindorks.tensorflowexample">
 
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="20" />
+
     <application
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
@@ -25,7 +29,7 @@
         <activity
             android:name=".AboutActivity"
             android:exported="true"
-            android:label="关于">
+            android:label="@string/title_activity_about">
             <intent-filter>
                 <action android:name="android.intent.action.SHOW_APP_INFO" />
 

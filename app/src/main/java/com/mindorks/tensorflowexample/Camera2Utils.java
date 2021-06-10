@@ -28,6 +28,7 @@ import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
@@ -44,6 +45,7 @@ import android.media.Image;
 import android.media.ImageReader;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
@@ -60,6 +62,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.io.File;
@@ -71,6 +74,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
@@ -243,6 +247,14 @@ public class Camera2Utils extends Fragment
 
     private static boolean mFlashEnable = true;
 
+    private ImageButton infoButton, flashButton;
+
+    /**
+     * The integer to save the current flashlight state.
+     */
+
+    private static Integer flashstate;
+
     /**
      * This is the output file for our picture.
      */
@@ -261,8 +273,11 @@ public class Camera2Utils extends Fragment
             //TODO: Bug on Secondtime photo taken here.
 
             if (mImage != null) {
+
                 mImageWidth = mImage.getWidth();
                 mImageHeight = mImage.getHeight();
+                mImage.setCropRect(new Rect(0, 0, Math.min(mImageWidth, mImageHeight), Math.min(mImageWidth, mImageHeight)));
+
                 Log.i(TAG, "mImage Width " + mImageWidth + " Height " + mImageHeight);
 
                 int mImageFormat = mImage.getFormat();
@@ -287,23 +302,15 @@ public class Camera2Utils extends Fragment
                         Log.i(TAG, "mImageFormat = YV12");
                         mImageBytes = null;
                         break;
+                    default:
+                        Log.i(TAG, "mImageFormat UnAvailable");
+                        mImageBytes = null;
+                        break;
                 }
 
-                switch (mSensorOrientation) {
-                    case 90:
-                        mImageBytes = ImageUtils.rotateYUV420_90(mImageBytes, mImageWidth, mImageHeight);
-                        break;
-                    case 180:
-                        mImageBytes = ImageUtils.rotateYUV420_180(mImageBytes, mImageWidth, mImageHeight);
-                        break;
-                    case 270:
-                        mImageBytes = ImageUtils.rotateYUV420_270(mImageBytes, mImageWidth, mImageHeight);
-                        break;
-                    default:
-                        break;
-                }
+                mBackgroundHandler.post(new BytesHandler(mImageBytes, mImageWidth, mImageHeight, mSensorOrientation));
             }
-            mImageAvailable = true;
+
             mBackgroundHandler.post(new ImageSaver(mImage, mFile));
             mImageAvailable = false;
         }
@@ -489,14 +496,19 @@ public class Camera2Utils extends Fragment
 
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
-        view.findViewById(R.id.info).setOnClickListener(this);
+        infoButton = view.findViewById(R.id.info);
+        flashButton = view.findViewById(R.id.flashlight);
+        infoButton.setOnClickListener(this);
+        flashButton.setOnClickListener(this);
         mTextureView = (AutoFitTextureView) view.findViewById(R.id.texture);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mFile = new File(getActivity().getExternalFilesDir(null), "TensorFlowExamplePic.jpg");
+        File mFilePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        mFile = new File(mFilePath, "TensorFlowExamplePic.jpg");
+        // TODO: Change saved picture path.
     }
 
     @Override
@@ -582,14 +594,14 @@ public class Camera2Utils extends Fragment
                 if (map == null) {
                     continue;
                 }
-                // TODO: Change ImageOutPut Format.
+                // TODO: Crop Image to Rectangle.
                 // For still image captures, we use the largest available size.
                 Size largest = Collections.max(
-                        Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)),
+                        Arrays.asList(map.getOutputSizes(ImageFormat.YUV_420_888)),
                         new CompareSizesByArea());
                 Log.i(TAG, "JPEG Max available W*H = " + largest.toString());
                 mImageReader = ImageReader.newInstance(largest.getWidth(), largest.getHeight(),
-                        ImageFormat.JPEG, /*maxImages*/2);
+                        ImageFormat.YUV_420_888, /*maxImages*/2);
                 mImageReader.setOnImageAvailableListener(
                         mOnImageAvailableListener, mBackgroundHandler);
 
@@ -790,6 +802,9 @@ public class Camera2Utils extends Fragment
                                 // Flash is automatically enabled when necessary.
                                 setAutoFlash(mPreviewRequestBuilder);
 
+                                // Get state first to prevent null.
+                                flashstate = mPreviewRequestBuilder.get(CaptureRequest.CONTROL_AE_MODE);
+
                                 // Finally, we start displaying the camera preview.
                                 mPreviewRequest = mPreviewRequestBuilder.build();
                                 mCaptureSession.setRepeatingRequest(mPreviewRequest,
@@ -844,11 +859,8 @@ public class Camera2Utils extends Fragment
         mTextureView.setTransform(matrix);
     }
 
-    public void setFlash() {
-        if (mFlashSupported) {
-            mFlashEnable = !mFlashEnable;
-        }
-        showToast("Flash State: " + mFlashEnable);
+    public static void setImageAvailable() {
+        mImageAvailable = true;
     }
 
     public Bitmap captureBitmap() {
@@ -856,10 +868,8 @@ public class Camera2Utils extends Fragment
         //Only when we get the correct BytesData can we get to the Bitmap Step.
         Bitmap bitmap;
         do {
-            if (mImageBytes != null) {
-                break;
-            }
-        } while (!mImageAvailable);
+
+        } while (!mImageAvailable && mImageBytes == null);
 
         if (mImageBytes != null) {
             bitmap = ImageUtils.getBitmap();
@@ -932,7 +942,20 @@ public class Camera2Utils extends Fragment
                     CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
 
             if (mFlashSupported && mFlashEnable) {
-                setAutoFlash(captureBuilder);
+                switch (flashstate) {
+                    case CaptureRequest.CONTROL_AE_MODE_ON:
+                        setOffFlash(captureBuilder);
+                        break;
+                    case CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH:
+                        setAutoFlash(captureBuilder);
+                        break;
+                    case CaptureRequest.CONTROL_AE_MODE_ON_ALWAYS_FLASH:
+                        setAlwaysFlash(captureBuilder);
+                        break;
+                    default:
+                        showToast("Flash State Undefined: " + flashstate);
+                        break;
+                }
             }
 
             // Orientation
@@ -983,7 +1006,20 @@ public class Camera2Utils extends Fragment
             // Reset the auto-focus trigger
             mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,
                     CameraMetadata.CONTROL_AF_TRIGGER_CANCEL);
-            setAutoFlash(mPreviewRequestBuilder);
+            switch (flashstate) {
+                case CaptureRequest.CONTROL_AE_MODE_ON:
+                    setOffFlash(mPreviewRequestBuilder);
+                    break;
+                case CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH:
+                    setAutoFlash(mPreviewRequestBuilder);
+                    break;
+                case CaptureRequest.CONTROL_AE_MODE_ON_ALWAYS_FLASH:
+                    setAlwaysFlash(mPreviewRequestBuilder);
+                    break;
+                default:
+                    showToast("Flash State Undefined: " + flashstate);
+                    break;
+            }
             mCaptureSession.capture(mPreviewRequestBuilder.build(), mCaptureCallback,
                     mBackgroundHandler);
             // After this, the camera will go back to the normal state of preview.
@@ -1012,6 +1048,30 @@ public class Camera2Utils extends Fragment
                 }
                 break;
             }
+            case R.id.flashlight: {
+                flashstate = mPreviewRequestBuilder.get(CaptureRequest.CONTROL_AE_MODE);
+                switch (flashstate) {
+                    case CaptureRequest.CONTROL_AE_MODE_ON:
+                        flashstate = CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH;
+                        flashButton.setImageResource(R.drawable.baseline_flash_auto_black_36);
+                        showToast("SetFlashMode: Auto");
+                        break;
+                    case CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH:
+                        flashstate = CaptureRequest.CONTROL_AE_MODE_ON_ALWAYS_FLASH;
+                        flashButton.setImageResource(R.drawable.baseline_flash_on_black_36);
+                        showToast("SetFlashMode: Always On");
+                        break;
+                    case CaptureRequest.CONTROL_AE_MODE_ON_ALWAYS_FLASH:
+                        flashstate = CaptureRequest.CONTROL_AE_MODE_ON;
+                        flashButton.setImageResource(R.drawable.baseline_flash_off_black_36);
+                        showToast("SetFlashMode: Off");
+                        break;
+                    default:
+                        showToast("Flash State Undefined: " + flashstate);
+                        break;
+                }
+                break;
+            }
         }
     }
 
@@ -1019,6 +1079,20 @@ public class Camera2Utils extends Fragment
         if (mFlashSupported) {
             requestBuilder.set(CaptureRequest.CONTROL_AE_MODE,
                     CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);
+        }
+    }
+
+    private void setOffFlash(CaptureRequest.Builder requestBuilder) {
+        if (mFlashSupported) {
+            requestBuilder.set(CaptureRequest.CONTROL_AE_MODE,
+                    CaptureRequest.CONTROL_AE_MODE_ON);
+        }
+    }
+
+    private void setAlwaysFlash(CaptureRequest.Builder requestBuilder) {
+        if (mFlashSupported) {
+            requestBuilder.set(CaptureRequest.CONTROL_AE_MODE,
+                    CaptureRequest.CONTROL_AE_MODE_ON_ALWAYS_FLASH);
         }
     }
 
@@ -1065,6 +1139,43 @@ public class Camera2Utils extends Fragment
         }
 
     }
+
+
+    private static class BytesHandler implements Runnable {
+
+        private int mWidth;
+        private int mHeight;
+        private int derSensorOrientation;
+        private byte[] mImageByte;
+
+        BytesHandler(byte[] ImageByte, int width, int height, int SensorOrientation) {
+            mWidth = width;
+            mHeight = height;
+            mImageByte = ImageByte;
+            derSensorOrientation = SensorOrientation;
+        }
+
+        @Override
+        public void run() {
+            if (mImageBytes != null) {
+                switch (derSensorOrientation) {
+                    case 90:
+                        mImageBytes = ImageUtils.rotateYUV420_90(mImageByte, mWidth, mHeight);
+                        break;
+                    case 180:
+                        mImageBytes = ImageUtils.rotateYUV420_180(mImageByte, mWidth, mHeight);
+                        break;
+                    case 270:
+                        mImageBytes = ImageUtils.rotateYUV420_270(mImageByte, mWidth, mHeight);
+                        break;
+                    default:
+                        break;
+                }
+                setImageAvailable();
+            }
+        }
+    }
+
 
     /**
      * Compares two {@code Size}s based on their areas.
